@@ -8,7 +8,7 @@ const PORT = 3000;
 let totoken;
 let rereftoken;
 
-const REDIRECT_URL = 'https://yt-data.onrender.com/oauth2callback';
+const REDIRECT_URL = 'http://localhost:3000/oauth2callback';
 
 const oauth2Client = new google.auth.OAuth2(
   '703037131815-2u8326gq9o4pn00pl2f8linrovjac2t6.apps.googleusercontent.com',
@@ -32,15 +32,23 @@ const refreshAccessToken = async () => {
   }
 };
 
-const checkAccessToken = async (req, res, next) => {
-  const expirationTime = 300000; // 5 minutes in milliseconds
 
-  if (!totoken || oauth2Client.isTokenExpiring() || oauth2Client.isTokenExpired(expirationTime)) {
+
+
+const checkAccessToken = async (req, res, next) => {
+
+  const now = Date.now();
+  if (!totoken || (oauth2Client.credentials.expiry_date || 0) < now) {
+    // Token doesn't exist or has expired, refresh it
     await refreshAccessToken();
   }
-
   next();
 };
+
+
+
+
+
 
 app.get('/auth-url', (req, res) => {
   const authUrl = oauth2Client.generateAuthUrl({
@@ -63,9 +71,13 @@ app.get('/oauth2callback', async (req, res) => {
     console.log('Refresh Token:', tokens.refresh_token);
 
     res.send('Authorization successful!');
+
   } catch (error) {
+    
     console.error('Error retrieving tokens:', error);
+    
     res.status(500).send('Authorization failed!');
+  
   }
 });
 
