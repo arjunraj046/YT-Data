@@ -8,7 +8,7 @@ const PORT = 3000;
 let totoken;
 let rereftoken;
 
-const REDIRECT_URL = 'http://localhost:3000/oauth2callback';
+const REDIRECT_URL = 'https://yt-data.onrender.com/oauth2callback';
 
 const oauth2Client = new google.auth.OAuth2(
   '703037131815-2u8326gq9o4pn00pl2f8linrovjac2t6.apps.googleusercontent.com',
