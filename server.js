@@ -11,14 +11,8 @@ let rereftoken;
 const REDIRECT_URL = 'https://yt-data.onrender.com/oauth2callback';
 
 const oauth2Client = new google.auth.OAuth2(
-
   '703037131815-2u8326gq9o4pn00pl2f8linrovjac2t6.apps.googleusercontent.com',
-  
   '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',
-  
-  
-  
-  
   REDIRECT_URL
 );
 
@@ -38,9 +32,6 @@ const refreshAccessToken = async () => {
   }
 };
 
-
-
-
 const checkAccessToken = async (req, res, next) => {
   const expirationTime = 300000; // 5 minutes in milliseconds
 
@@ -50,11 +41,6 @@ const checkAccessToken = async (req, res, next) => {
 
   next();
 };
-
-
-
-
-
 
 app.get('/auth-url', (req, res) => {
   const authUrl = oauth2Client.generateAuthUrl({
