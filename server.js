@@ -11,8 +11,10 @@ let rereftoken;
 const REDIRECT_URL = 'https://yt-data.onrender.com/oauth2callback';
 
 const oauth2Client = new google.auth.OAuth2(
-  '703037131815-2u8326gq9o4pn00pl2f8linrovjac2t6.apps.googleusercontent.com',
-  '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',
+  //'703037131815-2u8326gq9o4pn00pl2f8linrovjac2t6.apps.googleusercontent.com',
+  //'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',
+  '327277406160-7oddheciuo5m459o6cfqqobf7cclhnmp.apps.googleusercontent.com',
+  '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',
   REDIRECT_URL
 );
 
