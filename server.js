@@ -7,6 +7,7 @@ const PORT = 3000;
 
 let totoken;
 let rereftoken;
+let ownerID= "Jgrl-IYF1196ZxijRcZLXQ"
 
 const REDIRECT_URL = 'https://yt-data.onrender.com/oauth2callback';
 
@@ -140,17 +141,22 @@ app.get('/oauth2callback', async (req, res) => {
 // });
 
 
+
+
+
+
+
 app.get('/analytics', checkAccessToken, async (req, res) => {
 
   try {
     const accessToken = totoken;
-    let ids= Jgrl-IYF1196ZxijRcZLXQ    
+    let ids= "Jgrl-IYF1196ZxijRcZLXQ"  
     const response = await axios.get('https://youtubeanalytics.googleapis.com/v2/reports', {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
       params: {
-        ids,
+        ids:ownerID,
         startDate: '2023-11-01',
         endDate: '2023-11-30',
         metrics: 'subscribersGained,views,likes,comments,shares,videosAddedToPlaylists,averageViewDuration',  
@@ -166,13 +172,19 @@ app.get('/analytics', checkAccessToken, async (req, res) => {
 });
 
 
+
+
+
+
+
+
 app.get('/revenue', checkAccessToken, async (req, res) => {
   try {
     const accessToken = totoken;
     const startDate = '2023-11-01';
     const endDate = '2023-11-30';
     const currency = 'USD'; // Change this to your desired currency
-    let ownerID= Jgrl-IYF1196ZxijRcZLXQ
+    
 
     const response = await axios.get('https://youtube.googleapis.com/youtube/analytics/v1/reports', {
       headers: {
@@ -181,7 +193,8 @@ app.get('/revenue', checkAccessToken, async (req, res) => {
       params: {
         dimensions: 'day',
         endDate,
-        ids:ownerID,                  //'channel==MINE', // Replace 'MINE' with your channel ID or content owner ID
+        ids:ownerID,                  
+        //'channel==MINE', // Replace 'MINE' with your channel ID or content owner ID
         metrics: 'estimatedRevenue',
         startDate,
         currency,
@@ -193,10 +206,6 @@ app.get('/revenue', checkAccessToken, async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch revenue data' });
   }
 });
-
-
-
-
 
 
 
