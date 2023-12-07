@@ -67,6 +67,9 @@ app.get('/oauth2callback', async (req, res) => {
 
   try {
     const { tokens } = await oauth2Client.getToken(code);
+
+    console.log(tokens)
+    
     oauth2Client.setCredentials(tokens);
     totoken = tokens.access_token;
     rereftoken = tokens.refresh_token;
