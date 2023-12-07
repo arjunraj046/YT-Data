@@ -84,57 +84,124 @@ app.get('/oauth2callback', async (req, res) => {
   }
 });
 
-app.get('/youtube-analytics', checkAccessToken, async (req, res) => {
+
+
+
+// app.get('/youtube-analytics', checkAccessToken, async (req, res) => {
+//   try {
+//     const accessToken = totoken;
+
+//     const response = await axios.get('https://youtubeanalytics.googleapis.com/v2/reports', {
+//       headers: {
+//         Authorization: `Bearer ${accessToken}`,
+//       },
+//       params: {
+//         ids: 'channel==MINE',
+//         startDate: '2021-01-01',
+//         endDate: '2023-10-30',
+//         metrics: 'subscribersGained,views,likes,comments,averageViewDuration,watchTime,estimatedRevenue,cardImpressions,annotationImpressions,annotationClicks,uniqueViewers,subscriberCount',
+//         //metrics: 'subscribersGained',
+//         dimensions: 'day',
+//         sort: 'day',
+//       },
+//     });
+
+//     console.log('YouTube Analytics Data:', response.data);
+//     res.json(response.data);
+//   } catch (error) {
+//     console.error('Error fetching YouTube Analytics data:', error.response.data);
+//     res.status(500).json({ error: 'Failed to fetch YouTube Analytics data' });
+//   }
+// });
+
+// app.get('/ads-revenue', checkAccessToken, async (req, res) => {
+//   try {
+//     const accessToken = totoken;
+
+//     const response = await axios.get('https://youtubeanalytics.googleapis.com/v2/reports', {
+//       headers: {
+//         Authorization: `Bearer ${accessToken}`,
+//       },
+//       params: {
+//         ids: 'channel==MINE',
+//         startDate: '2022-01-01',
+//         endDate: '2022-12-30',
+//         metrics: 'estimatedRevenue,adImpressions,monetizedPlaybacks',
+//         dimensions: 'day,country,video',
+//       },
+//     });
+
+//     console.log('Ads Revenue Data:', response.data);
+//     res.json(response.data);
+//   } catch (error) {
+//     console.error('Error fetching Ads Revenue data:', error.response.data);
+//     res.status(500).json({ error: 'Failed to fetch Ads Revenue data' });
+//   }
+// });
+
+
+app.get('/analytics', checkAccessToken, async (req, res) => {
+
   try {
     const accessToken = totoken;
-
+    let ids= Jgrl-IYF1196ZxijRcZLXQ    
     const response = await axios.get('https://youtubeanalytics.googleapis.com/v2/reports', {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
       params: {
-        ids: 'channel==MINE',
-        startDate: '2021-01-01',
-        endDate: '2023-10-30',
-        metrics: 'subscribersGained,views,likes,comments,averageViewDuration,watchTime,estimatedRevenue,cardImpressions,annotationImpressions,annotationClicks,uniqueViewers,subscriberCount',
-        //metrics: 'subscribersGained',
+        ids,
+        startDate: '2023-11-01',
+        endDate: '2023-11-30',
+        metrics: 'subscribersGained,views,likes,comments,shares,videosAddedToPlaylists,averageViewDuration',  
         dimensions: 'day',
         sort: 'day',
       },
     });
 
-    console.log('YouTube Analytics Data:', response.data);
     res.json(response.data);
   } catch (error) {
-    console.error('Error fetching YouTube Analytics data:', error.response.data);
     res.status(500).json({ error: 'Failed to fetch YouTube Analytics data' });
   }
 });
 
-app.get('/ads-revenue', checkAccessToken, async (req, res) => {
+
+app.get('/revenue', checkAccessToken, async (req, res) => {
   try {
     const accessToken = totoken;
+    const startDate = '2023-11-01';
+    const endDate = '2023-11-30';
+    const currency = 'USD'; // Change this to your desired currency
+    let ownerID= Jgrl-IYF1196ZxijRcZLXQ
 
-    const response = await axios.get('https://youtubeanalytics.googleapis.com/v2/reports', {
+    const response = await axios.get('https://youtube.googleapis.com/youtube/analytics/v1/reports', {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
       params: {
-        ids: 'channel==MINE',
-        startDate: '2022-01-01',
-        endDate: '2022-12-30',
-        metrics: 'estimatedRevenue,adImpressions,monetizedPlaybacks',
-        dimensions: 'day,country,video',
+        dimensions: 'day',
+        endDate,
+        ids:ownerID,                  //'channel==MINE', // Replace 'MINE' with your channel ID or content owner ID
+        metrics: 'estimatedRevenue',
+        startDate,
+        currency,
       },
     });
 
-    console.log('Ads Revenue Data:', response.data);
     res.json(response.data);
   } catch (error) {
-    console.error('Error fetching Ads Revenue data:', error.response.data);
-    res.status(500).json({ error: 'Failed to fetch Ads Revenue data' });
+    res.status(500).json({ error: 'Failed to fetch revenue data' });
   }
 });
+
+
+
+
+
+
+
+
+
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
