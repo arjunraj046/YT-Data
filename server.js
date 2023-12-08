@@ -101,6 +101,7 @@ app.get('/partnerChannels', checkAccessToken, async (req, res) => {
       },
     });
     console.log('Partner Channels:', response.data);
+    console.log(response);
     res.json(response.data);
   } catch (error) {
     console.error('Error:', error);
@@ -123,6 +124,7 @@ app.get('/allChannels', checkAccessToken, async (req, res) => {
       },
     });
     console.log('All Channels:', response.data);
+    console.log(response);
     res.json(response.data);
   } catch (error) {
     console.error('Error:', error);
@@ -144,6 +146,7 @@ app.get('/assets',checkAccessToken,async (req,res)=>{
     });
 
     console.log('Content Details:', response.data);
+    console.log(response);
     res.json(response.data); // Sending the response data back as JSON
     
   } catch (error) {
@@ -151,6 +154,66 @@ app.get('/assets',checkAccessToken,async (req,res)=>{
     res.status(500).json({ error: 'Failed to fetch content owner data' });
   }
 })
+
+
+app.get('/youtube-analytics', checkAccessToken, async (req, res) => {
+  try {
+   
+
+    const response = await axios.get('https://youtubeanalytics.googleapis.com/v2/reports', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      params: {
+        ids: 'channel==MINE',
+        startDate: '2023-11-01',
+        endDate: '2023-11-30',
+        metrics: 'subscribersGained,views,likes,comments,averageViewDuration,watchTime,estimatedRevenue,cardImpressions,annotationImpressions,annotationClicks,uniqueViewers,subscriberCount',
+        //metrics: 'subscribersGained',
+        dimensions: 'day',
+        sort: 'day',
+      },
+    });
+
+    console.log('YouTube Analytics Data:', response.data);
+    console.log(response);
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error fetching YouTube Analytics data:', error.response.data);
+    res.status(500).json({ error: 'Failed to fetch YouTube Analytics data' });
+  }
+});
+
+
+
+app.get('/ads-revenue', checkAccessToken, async (req, res) => {
+  try {
+
+    const response = await axios.get('https://youtubeanalytics.googleapis.com/v2/reports', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      params: {
+        ids: 'channel==MINE',
+        startDate: '2023-11-01',
+        endDate: '2023-11-30',
+        metrics: 'estimatedRevenue,adImpressions,monetizedPlaybacks',
+        dimensions: 'day,country,video',
+      },
+    });
+      
+    console.log('Ads Revenue Data:', response.data);
+    console.log(response);
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error fetching Ads Revenue data:', error.response.data);
+    res.status(500).json({ error: 'Failed to fetch Ads Revenue data' });
+  }
+});
+
+
+
+
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
