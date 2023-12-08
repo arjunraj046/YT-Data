@@ -89,7 +89,7 @@ app.get('/oauth2callback', async (req, res) => {
   }
 });
 
-app.get('/',checkAccessToken,async (req,res)=>{
+app.get('/analytics',checkAccessToken,async (req,res)=>{
           console.log("contentOwners 😵 😵‍💫 🫥 🤐 🥴");
   try {
     const url = baseURL + 'contentOwners/' + ownerID + '/assets'; 
