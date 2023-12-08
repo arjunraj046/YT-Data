@@ -89,7 +89,49 @@ app.get('/oauth2callback', async (req, res) => {
   }
 });
 
-app.get('/analytics',checkAccessToken,async (req,res)=>{
+app.get('/partnerChannels', checkAccessToken, async (req, res) => {
+  try {
+    const url = `https://www.googleapis.com/youtube/partner/v1/partnerChannels`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      params: {
+        onBehalfOfContentOwner: ownerID,
+      },
+    });
+    console.log('Partner Channels:', response.data);
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Failed to fetch partner channel data' });
+  }
+});
+
+
+
+app.get('/allChannels', checkAccessToken, async (req, res) => {
+  try {
+    const url = `https://www.googleapis.com/youtube/v3/channels`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      params: {
+        part: 'snippet,contentDetails,statistics',
+        mine: true, // Retrieves channels associated with the authenticated user
+      },
+    });
+    console.log('All Channels:', response.data);
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Failed to fetch channel data' });
+  }
+});
+
+
+app.get('/assets',checkAccessToken,async (req,res)=>{
           console.log("contentOwners 😵 😵‍💫 🫥 🤐 🥴");
   try {
     const url = baseURL + 'contentOwners/' + ownerID + '/assets'; 
