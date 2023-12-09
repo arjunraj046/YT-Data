@@ -90,31 +90,52 @@ app.get('/oauth2callback', async (req, res) => {
 });
 
 
-// Route to fetch Partner Owner ID
-app.get('/partnerOwnerID', checkAccessToken, async (req, res) => {
-  const youtubePartner = google.youtubePartner({
-    version: 'v1',
-    auth: oauth2Client,
-  });
+// // Route to fetch Partner Owner ID
+// app.get('/partnerOwnerID', checkAccessToken, async (req, res) => {
+//   const youtubePartner = google.youtubePartner({
+//     version: 'v1',
+//     auth: oauth2Client,
+//   });
 
-  youtubePartner.partners.list({
-    onBehalfOfContentOwner: ownerID, // Replace with your content owner ID
-  }, (err, response) => {
-    if (err) {
-      console.error('Error fetching partners:', err);
-      res.status(500).json({ error: 'Error fetching Partner Owner ID' });
-      return;
-    }
-    console.log(res);
+//   youtubePartner.partners.list({
+//     onBehalfOfContentOwner: ownerID, // Replace with your content owner ID
+//   }, (err, response) => {
+//     if (err) {
+//       console.error('Error fetching partners:', err);
+//       res.status(500).json({ error: 'Error fetching Partner Owner ID' });
+//       return;
+//     }
+//     console.log(res);
 
-    const partnerOwnerID = response.data.items[0].id; // Assuming the ID is in the response
+//     const partnerOwnerID = response.data.items[0].id; // Assuming the ID is in the response
   
+//     res.json({ partnerOwnerID });
+  
+//   });
+// });
+
+app.get('/partnerOwnerID', async (req, res) => {
+  try {
+    // Fetch Partner Owner ID using YouTube Partner API endpoint
+    const response = await axios.get('https://www.googleapis.com/youtube/partner/v1/partnerships', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      params: {
+        // Add necessary parameters
+        id: ownerID, // Include the specific Owner ID
+      },
+    });
+
+    console.log(response);
+
+    const partnerOwnerID = response.data.items[0].id;
     res.json({ partnerOwnerID });
-  
-  });
+  } catch (error) {
+    console.error('Error fetching Partner Owner ID:', error.response.data);
+    res.status(500).json({ error: 'Error fetching Partner Owner ID' });
+  }
 });
-
-
 
 
 app.get('/youtube-analytics', checkAccessToken, async (req, res) => {
