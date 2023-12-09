@@ -89,71 +89,6 @@ app.get('/oauth2callback', async (req, res) => {
   }
 });
 
-// app.get('/partnerChannels', checkAccessToken, async (req, res) => {
-//   try {
-//     const url = `https://www.googleapis.com/youtube/partner/v1/partnerChannels`;
-//     const response = await axios.get(url, {
-//       headers: {
-//         Authorization: `Bearer ${accessToken}`,
-//       },
-//       params: {
-//         onBehalfOfContentOwner: ownerID,
-//       },
-//     });
-//     console.log('Partner Channels:', response.data);
-//     console.log(response);
-//     res.json(response.data);
-//   } catch (error) {
-//     console.error('Error:', error);
-//     res.status(500).json({ error: 'Failed to fetch partner channel data' });
-//   }
-// });
-
-
-
-// app.get('/allChannels', checkAccessToken, async (req, res) => {
-//   try {
-//     const url = `https://www.googleapis.com/youtube/v3/channels`;
-//     const response = await axios.get(url, {
-//       headers: {
-//         Authorization: `Bearer ${accessToken}`,
-//       },
-//       params: {
-//         part: 'snippet,contentDetails,statistics',
-//         mine: true, // Retrieves channels associated with the authenticated user
-//       },
-//     });
-//     console.log('All Channels:', response.data);
-//     console.log(response);
-//     res.json(response.data);
-//   } catch (error) {
-//     console.error('Error:', error);
-//     res.status(500).json({ error: 'Failed to fetch channel data' });
-//   }
-// });
-
-
-// app.get('/assets',checkAccessToken,async (req,res)=>{
-//           console.log("contentOwners 😵 😵‍💫 🫥 🤐 🥴");
-//   try {
-//     const url = baseURL + 'contentOwners/' + ownerID + '/assets'; 
-//     // Replace 'assets' with the specific endpoint you want to fetch data from
-
-//     const response = await axios.get(url, {
-//       headers: {
-//         Authorization: `Bearer ${accessToken}`,
-//       },
-//     });
-
-//     console.log('Content Details:', response.data);
-//     console.log(response);
-//     res.json(response.data); // Sending the response data back as JSON
-    
-//   } catch (error) {
-//      console.error('Error:', error);
-//     res.status(500).json({ error: 'Failed to fetch content owner data' });
-//   }
-// })
 
 
 
@@ -169,7 +104,7 @@ app.get('/youtube-analytics', checkAccessToken, async (req, res) => {
         // ids: 'channel==MINE',
         startDate: '2023-01-01',
         endDate: '2023-10-30',
-        metrics: 'subscribersGained',
+        metrics: 'subscribersGained,subscribersLost',
         dimensions: 'day',
         sort: 'day',
       },
@@ -181,6 +116,48 @@ app.get('/youtube-analytics', checkAccessToken, async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch YouTube Analytics data' });
   }
 });
+
+
+app.get('/youtube-content-list', checkAccessToken, async (req, res) => {
+  try {
+    const response = await axios.get('https://www.googleapis.com/youtube/v3/playlists', {
+      headers: { Authorization: `Bearer ${accessToken}`},
+      params: {
+        part: 'snippet',
+        channelId: ownerID, // Replace ownerID with the channel ID you want to fetch content for
+        maxResults: 50, // You can adjust the maximum number of results per page
+      },
+    });
+    console.log('Channel Content List:', response.data);
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error fetching channel content list:', error.response.data);
+    res.status(500).json({ error: 'Failed to fetch channel content list' });
+  }
+});
+
+
+app.get('/channel-videos', checkAccessToken, async (req, res) => {
+  try {
+    const response = await axios.get('https://www.googleapis.com/youtube/v3/search', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      params: {
+        part: 'snippet',
+        channelId: ownerID, // Replace ownerID with the channel ID you want to fetch content for
+        type: 'video',
+        maxResults: 50, // You can adjust the maximum number of results per page
+      },
+    });
+    console.log('Channel Videos:', response.data);
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error fetching channel videos:', error.response.data);
+    res.status(500).json({ error: 'Failed to fetch channel videos' });
+  }
+});
+
 
 
 
