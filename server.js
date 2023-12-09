@@ -142,19 +142,22 @@ app.get('/youtube-analytics', checkAccessToken, async (req, res) => {
   console.log('youtube-analytics  💀 ☠️ ');
   try {
     // Access token obtained from checkAccessToken middleware
-    const response = await axios.get('https://youtubeanalytics.googleapis.com/v2/reports', {
+    
+    https://youtubereporting.googleapis.com/v1/media/CONTENT_OWNER/Jgrl-IYF1196ZxijRcZLXQ/jobs/016704f9-e693-4886-ac81-2ca79a92b8b0/reports/8457459121?alt=media
+    
+    const response = await axios.get('https://youtubereporting.googleapis.com/v1/media/CONTENT_OWNER/Jgrl-IYF1196ZxijRcZLXQ/jobs/016704f9-e693-4886-ac81-2ca79a92b8b0/reports/8457459121?alt=media', {
     headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-      params: {
-        ids: ownerID,
-        // ids: 'channel==MINE',
-        startDate: '2023-01-01',
-        endDate: '2023-10-30',
-        metrics: 'subscribersGained,subscribersLost',
-        dimensions: 'day',
-        sort: 'day',
-      },
+      // params: {
+      //   ids: ownerID,
+      //   // ids: 'channel==MINE',
+      //   startDate: '2023-01-01',
+      //   endDate: '2023-10-30',
+      //   metrics: 'subscribersGained,subscribersLost',
+      //   dimensions: 'day',
+      //   sort: 'day',
+      // },
     });
     console.log('YouTube Analytics Data:', response.data);
     res.json(response.data)
