@@ -90,6 +90,31 @@ app.get('/oauth2callback', async (req, res) => {
 });
 
 
+// Route to fetch Partner Owner ID
+app.get('/partnerOwnerID', checkAccessToken, async (req, res) => {
+  const youtubePartner = google.youtubePartner({
+    version: 'v1',
+    auth: oauth2Client,
+  });
+
+  youtubePartner.partners.list({
+    onBehalfOfContentOwner: ownerID, // Replace with your content owner ID
+  }, (err, response) => {
+    if (err) {
+      console.error('Error fetching partners:', err);
+      res.status(500).json({ error: 'Error fetching Partner Owner ID' });
+      return;
+    }
+    console.log(res);
+
+    const partnerOwnerID = response.data.items[0].id; // Assuming the ID is in the response
+  
+    res.json({ partnerOwnerID });
+  
+  });
+});
+
+
 
 
 app.get('/youtube-analytics', checkAccessToken, async (req, res) => {
