@@ -169,7 +169,7 @@ app.get('/youtube-analytics', checkAccessToken, async (req, res) => {
         // ids: 'channel==MINE',
         startDate: '2023-01-01',
         endDate: '2023-10-30',
-        metrics: 'subscribersGained,estimatedRevenue',
+        metrics: 'subscribersGained',
         dimensions: 'day',
         sort: 'day',
       },
