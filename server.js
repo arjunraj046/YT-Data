@@ -89,128 +89,98 @@ app.get('/oauth2callback', async (req, res) => {
   }
 });
 
-app.get('/partnerChannels', checkAccessToken, async (req, res) => {
-  try {
-    const url = `https://www.googleapis.com/youtube/partner/v1/partnerChannels`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-      params: {
-        onBehalfOfContentOwner: ownerID,
-      },
-    });
-    console.log('Partner Channels:', response.data);
-    console.log(response);
-    res.json(response.data);
-  } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({ error: 'Failed to fetch partner channel data' });
-  }
-});
+// app.get('/partnerChannels', checkAccessToken, async (req, res) => {
+//   try {
+//     const url = `https://www.googleapis.com/youtube/partner/v1/partnerChannels`;
+//     const response = await axios.get(url, {
+//       headers: {
+//         Authorization: `Bearer ${accessToken}`,
+//       },
+//       params: {
+//         onBehalfOfContentOwner: ownerID,
+//       },
+//     });
+//     console.log('Partner Channels:', response.data);
+//     console.log(response);
+//     res.json(response.data);
+//   } catch (error) {
+//     console.error('Error:', error);
+//     res.status(500).json({ error: 'Failed to fetch partner channel data' });
+//   }
+// });
 
 
 
-app.get('/allChannels', checkAccessToken, async (req, res) => {
-  try {
-    const url = `https://www.googleapis.com/youtube/v3/channels`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-      params: {
-        part: 'snippet,contentDetails,statistics',
-        mine: true, // Retrieves channels associated with the authenticated user
-      },
-    });
-    console.log('All Channels:', response.data);
-    console.log(response);
-    res.json(response.data);
-  } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({ error: 'Failed to fetch channel data' });
-  }
-});
+// app.get('/allChannels', checkAccessToken, async (req, res) => {
+//   try {
+//     const url = `https://www.googleapis.com/youtube/v3/channels`;
+//     const response = await axios.get(url, {
+//       headers: {
+//         Authorization: `Bearer ${accessToken}`,
+//       },
+//       params: {
+//         part: 'snippet,contentDetails,statistics',
+//         mine: true, // Retrieves channels associated with the authenticated user
+//       },
+//     });
+//     console.log('All Channels:', response.data);
+//     console.log(response);
+//     res.json(response.data);
+//   } catch (error) {
+//     console.error('Error:', error);
+//     res.status(500).json({ error: 'Failed to fetch channel data' });
+//   }
+// });
 
 
-app.get('/assets',checkAccessToken,async (req,res)=>{
-          console.log("contentOwners 😵 😵‍💫 🫥 🤐 🥴");
-  try {
-    const url = baseURL + 'contentOwners/' + ownerID + '/assets'; 
-    // Replace 'assets' with the specific endpoint you want to fetch data from
+// app.get('/assets',checkAccessToken,async (req,res)=>{
+//           console.log("contentOwners 😵 😵‍💫 🫥 🤐 🥴");
+//   try {
+//     const url = baseURL + 'contentOwners/' + ownerID + '/assets'; 
+//     // Replace 'assets' with the specific endpoint you want to fetch data from
 
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+//     const response = await axios.get(url, {
+//       headers: {
+//         Authorization: `Bearer ${accessToken}`,
+//       },
+//     });
 
-    console.log('Content Details:', response.data);
-    console.log(response);
-    res.json(response.data); // Sending the response data back as JSON
+//     console.log('Content Details:', response.data);
+//     console.log(response);
+//     res.json(response.data); // Sending the response data back as JSON
     
-  } catch (error) {
-     console.error('Error:', error);
-    res.status(500).json({ error: 'Failed to fetch content owner data' });
-  }
-})
+//   } catch (error) {
+//      console.error('Error:', error);
+//     res.status(500).json({ error: 'Failed to fetch content owner data' });
+//   }
+// })
+
 
 
 app.get('/youtube-analytics', checkAccessToken, async (req, res) => {
   try {
-   
-
+    // Access token obtained from checkAccessToken middleware
     const response = await axios.get('https://youtubeanalytics.googleapis.com/v2/reports', {
-      headers: {
+    headers: {
         Authorization: `Bearer ${accessToken}`,
       },
       params: {
-        ids: 'channel==MINE',
-        startDate: '2023-11-01',
-        endDate: '2023-11-30',
-        metrics: 'subscribersGained,views,likes,comments,averageViewDuration,watchTime,estimatedRevenue,cardImpressions,annotationImpressions,annotationClicks,uniqueViewers,subscriberCount',
-        //metrics: 'subscribersGained',
+        ids: ownerID,
+        // ids: 'channel==MINE',
+        startDate: '2023-01-01',
+        endDate: '2023-10-30',
+        metrics: 'subscribersGained,estimatedRevenue',
         dimensions: 'day',
         sort: 'day',
       },
     });
-
     console.log('YouTube Analytics Data:', response.data);
-    console.log(response);
-    res.json(response.data);
+    res.json(response.data)
   } catch (error) {
     console.error('Error fetching YouTube Analytics data:', error.response.data);
     res.status(500).json({ error: 'Failed to fetch YouTube Analytics data' });
   }
 });
-
-
-
-app.get('/ads-revenue', checkAccessToken, async (req, res) => {
-  try {
-
-    const response = await axios.get('https://youtubeanalytics.googleapis.com/v2/reports', {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-      params: {
-        ids: 'channel==MINE',
-        startDate: '2023-11-01',
-        endDate: '2023-11-30',
-        metrics: 'estimatedRevenue,adImpressions,monetizedPlaybacks',
-        dimensions: 'day,country,video',
-      },
-    });
-      
-    console.log('Ads Revenue Data:', response.data);
-    console.log(response);
-    res.json(response.data);
-  } catch (error) {
-    console.error('Error fetching Ads Revenue data:', error.response.data);
-    res.status(500).json({ error: 'Failed to fetch Ads Revenue data' });
-  }
-});
-
 
 
 
