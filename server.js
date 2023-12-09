@@ -93,6 +93,7 @@ app.get('/oauth2callback', async (req, res) => {
 
 
 app.get('/youtube-analytics', checkAccessToken, async (req, res) => {
+  console.log('youtube-analytics');
   try {
     // Access token obtained from checkAccessToken middleware
     const response = await axios.get('https://youtubeanalytics.googleapis.com/v2/reports', {
@@ -119,6 +120,7 @@ app.get('/youtube-analytics', checkAccessToken, async (req, res) => {
 
 
 app.get('/youtube-content-list', checkAccessToken, async (req, res) => {
+   console.log('youtube-content-list');
   try {
     const response = await axios.get('https://www.googleapis.com/youtube/v3/playlists', {
       headers: { Authorization: `Bearer ${accessToken}`},
@@ -138,6 +140,7 @@ app.get('/youtube-content-list', checkAccessToken, async (req, res) => {
 
 
 app.get('/channel-videos', checkAccessToken, async (req, res) => {
+  console.log('channel-videos');
   try {
     const response = await axios.get('https://www.googleapis.com/youtube/v3/search', {
       headers: {
