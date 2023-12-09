@@ -138,26 +138,26 @@ app.get('/partnerOwnerID', async (req, res) => {
 });
 
 
-app.get('/youtube-analytics', checkAccessToken, async (req, res) => {
-  console.log('youtube-analytics  💀 ☠️ ');
-  try {
+// app.get('/youtube-analytics', checkAccessToken, async (req, res) => {
+//   console.log('youtube-analytics  💀 ☠️ ');
+//   try {
     
     
-    https://youtubereporting.googleapis.com/v1/media/CONTENT_OWNER/Jgrl-IYF1196ZxijRcZLXQ/jobs/016704f9-e693-4886-ac81-2ca79a92b8b0/reports/8457459121?alt=media
+//     https://youtubereporting.googleapis.com/v1/media/CONTENT_OWNER/Jgrl-IYF1196ZxijRcZLXQ/jobs/016704f9-e693-4886-ac81-2ca79a92b8b0/reports/8457459121?alt=media
     
-    const response = await axios.get('https://youtubereporting.googleapis.com/v1/media/CONTENT_OWNER/Jgrl-IYF1196ZxijRcZLXQ/jobs/016704f9-e693-4886-ac81-2ca79a92b8b0/reports/8457459121?alt=media', {
-    headers: {
-        Authorization: `Bearer ${accessToken}`,
-      }
+//     const response = await axios.get('https://youtubereporting.googleapis.com/v1/media/CONTENT_OWNER/Jgrl-IYF1196ZxijRcZLXQ/jobs/016704f9-e693-4886-ac81-2ca79a92b8b0/reports/8457459121?alt=media', {
+//     headers: {
+//         Authorization: `Bearer ${accessToken}`,
+//       }
      
-    });
-    console.log('YouTube Analytics Data:', response);
-    res.json(response)
-  } catch (error) {
-    console.error('Error fetching YouTube Analytics data:', error.response.data);
-    res.status(500).json({ error: 'Failed to fetch YouTube Analytics data' });
-  }
-});
+//     });
+//     console.log('YouTube Analytics Data:', response);
+//     res.json(response)
+//   } catch (error) {
+//     console.error('Error fetching YouTube Analytics data:', error.response.data);
+//     res.status(500).json({ error: 'Failed to fetch YouTube Analytics data' });
+//   }
+// });
 
 
 app.get('/youtube-content-list', checkAccessToken, async (req, res) => {
