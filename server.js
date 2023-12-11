@@ -164,7 +164,8 @@ app.get('/list-jobs', checkAccessToken, async (req, res) => {
 });
 
 
-app.get('/job-details/AdRevenueSummaryJob', checkAccessToken, async (req, res) => {
+app.get('/job-details/:jobId', checkAccessToken, async (req, res) => {
+
   try {
     const jobId = req.params.jobId; // Extract the job ID from the request params
 
