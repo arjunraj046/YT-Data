@@ -202,7 +202,7 @@ const jobData = {
 
 
 // Assume you have the necessary setup for accessToken, ownerId, and other configurations
-app.get('/get-report-metadata/:reportId', checkAccessToken, async (req, res) => {
+app.get('/get-report-metadata', checkAccessToken, async (req, res) => {
   try {
     // const {  reportId } = req.params;
     const reportId="content_owner_estimated_revenue_a1"
@@ -228,6 +228,10 @@ app.get('/get-report-metadata/:reportId', checkAccessToken, async (req, res) => 
 
 
 
+
+app.use((req, res) => {
+  res.status(404).json({ error: 'Route not found' });
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
