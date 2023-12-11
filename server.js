@@ -23,8 +23,9 @@ const oauth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_U
 const scopes = [
   'https://www.googleapis.com/auth/youtube.readonly',
   'https://www.googleapis.com/auth/youtube',
+  'https://www.googleapis.com/auth/yt-analytics.readonly',
+  'https://www.googleapis.com/auth/yt-analytics-monetary.readonly'
 ];
-
 
 
 
@@ -88,6 +89,102 @@ app.get('/oauth2callback', async (req, res) => {
     res.status(500).send('Authorization failed!');
   }
 });
+
+
+
+
+app.get('/youtube-report-types', checkAccessToken, async (req, res) => {
+  try {
+    const response = await axios.get('https://youtubereporting.googleapis.com/v1/reportTypes', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      params: {
+        onBehalfOfContentOwner: ownerID,
+      },
+    });
+    console.log('Report Types:', response.data);
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error fetching report types:', error.response.data);
+    res.status(500).json({ error: 'Failed to fetch report types' });
+  }
+});
+
+
+app.post('/create-job', checkAccessToken, async (req, res) => {
+  try {
+    const requestBody = {
+      reportTypeId: 'content_owner_global_ad_revenue_summary_a1',
+      job: {
+        name: 'AdRevenueSummaryJob', 
+        reportTypes: ['content_owner_global_ad_revenue_summary_a1'],
+        startTime: '2023-01-01T00:00:00Z',
+        endTime: '2023-02-28T23:59:59Z',
+      },
+    };
+
+    const response = await axios.post('https://youtubereporting.googleapis.com/v1/jobs', requestBody, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      params: {
+        onBehalfOfContentOwner: ownerID,
+      },
+    });
+
+    console.log('Created Job:', response.data);
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error creating job:', error.response.data);
+    res.status(500).json({ error: 'Failed to create job' });
+  }
+});
+
+
+
+app.get('/list-jobs', checkAccessToken, async (req, res) => {
+  try {
+    const response = await axios.get('https://youtubereporting.googleapis.com/v1/jobs', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      params: {
+        onBehalfOfContentOwner: ownerID,
+      },
+    });
+
+    console.log('List of Jobs:', response.data);
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error listing jobs:', error.response.data);
+    res.status(500).json({ error: 'Failed to list jobs' });
+  }
+});
+
+
+app.get('/job-details/AdRevenueSummaryJob', checkAccessToken, async (req, res) => {
+  try {
+    const jobId = req.params.jobId; // Extract the job ID from the request params
+
+    const response = await axios.get(`https://youtubereporting.googleapis.com/v1/jobs/${jobId}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      params: {
+        onBehalfOfContentOwner: ownerID,
+      },
+    });
+
+    console.log('Job Details:', response.data);
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error fetching job details:', error.response.data);
+    res.status(500).json({ error: 'Failed to fetch job details' });
+  }
+});
+
 
 
 
