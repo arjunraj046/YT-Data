@@ -114,33 +114,6 @@ app.get('/youtube-report-types', checkAccessToken, async (req, res) => {
 
 
 
-app.get('/create-job', checkAccessToken, async (req, res) => {
-  try {
-    const requestBody = {
-      job: {
-        reportTypeId: 'content_owner_estimated_revenue_a1',
-        reportTypes: ['content_owner_estimated_revenue_a1'],
-        startTime: '2023-10-01T00:00:00Z',
-        endTime: '2023-11-28T23:59:59Z',
-        name: 'AdRevenue',
-      }
-    };
-    const response = await axios.post('https://youtubereporting.googleapis.com/v1/jobs', requestBody, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      params: {
-        onBehalfOfContentOwner: ownerID,
-      },
-    });
-    console.log('Created Job:', response.data);
-    res.json(response.data);
-  } catch (error) {
-    console.error('Error creating job:', error.response.data);
-    res.status(500).json({ error: 'Failed to create job' });
-  }
-});
 
 
 
@@ -207,6 +180,28 @@ const jobData = {
 
 
 
+app.get('/create-job', checkAccessToken, async (req, res) => {
+  try {
+    const requestBody = {
+      job: {
+        reportTypeId: 'content_owner_estimated_revenue_a1',
+        reportTypes: ['content_owner_estimated_revenue_a1'],
+        startTime: '2023-10-01T00:00:00Z',
+        endTime: '2023-11-28T23:59:59Z',
+        name: 'AdRevenue',
+      }
+    };
+    const response = await axios.post('https://youtubereporting.googleapis.com/v1/jobs', requestBody,
+     { headers: { Authorization: `Bearer ${accessToken}`,'Content-Type': 'application/json',},
+      params: {    onBehalfOfContentOwner: ownerID,},
+    });
+    console.log('Created Job:', response.data);
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error creating job:', error.response.data);
+    res.status(500).json({ error: 'Failed to create job' });
+  }
+});
 
 // Assume you have the necessary setup for accessToken, ownerId, and other configurations
 app.get('/get-report', checkAccessToken, async (req, res) => {
