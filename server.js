@@ -112,18 +112,68 @@ app.get('/youtube-report-types', checkAccessToken, async (req, res) => {
 });
 
 
+// app.post('/create-job', checkAccessToken, async (req, res) => {
+//   try {
+//     // const requestBody = {
+//     //   reportTypeId: 'content_owner_global_ad_revenue_summary_a1',
+//     //   job: {
+//     //     name: 'AdRevenueSummaryJob', 
+//     //     reportTypes: ['content_owner_global_ad_revenue_summary_a1'],
+//     //     startTime: '2023-01-01T00:00:00Z',
+//     //     endTime: '2023-02-28T23:59:59Z',
+//     //   },
+//     // };
+//     const requestBody = {
+//       reportTypeId: 'content_owner_global_ad_revenue_summary_a1',
+//       job: {
+//         reportTypes: ['content_owner_global_ad_revenue_summary_a1'],
+//         // You might need to adjust this according to your specific requirements
+//         // For instance, specifying a name might not be necessary or might need a different key
+//         name: 'AdRevenueSummaryJob',
+//         // Adjust the time range as needed
+//         startTime: '2023-01-01T00:00:00Z',
+//         endTime: '2023-02-28T23:59:59Z',
+//       },
+//     };
+
+//     const response = await axios.post('https://youtubereporting.googleapis.com/v1/jobs', requestBody, {
+//       headers: {
+//         Authorization: `Bearer ${accessToken}`,
+//         'Content-Type': 'application/json',
+//       },
+//       params: {
+//         onBehalfOfContentOwner: ownerID,
+//       },
+//     });
+
+//     console.log('Created Job:', response.data);
+//     res.json(response.data);
+//   } catch (error) {
+//     console.error('Error creating job:',error.response.data)
+//     res.status(500).json({ error: 'Failed to create job' });
+//   }
+// });
+
+
+
+
+
+
+
+
+
+
 app.post('/create-job', checkAccessToken, async (req, res) => {
   try {
     const requestBody = {
-      reportTypeId: 'content_owner_global_ad_revenue_summary_a1',
       job: {
-        name: 'AdRevenueSummaryJob', 
-        reportTypes: ['content_owner_global_ad_revenue_summary_a1'],
-        startTime: '2023-01-01T00:00:00Z',
-        endTime: '2023-02-28T23:59:59Z',
-      },
+        reportTypeId: 'content_owner_estimated_revenue_a1',
+        reportTypes: ['content_owner_estimated_revenue_a1'],
+        startTime: '2023-10-01T00:00:00Z',
+        endTime: '2023-11-28T23:59:59Z',
+        name: 'AdRevenue',
+      }
     };
-
     const response = await axios.post('https://youtubereporting.googleapis.com/v1/jobs', requestBody, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -133,7 +183,6 @@ app.post('/create-job', checkAccessToken, async (req, res) => {
         onBehalfOfContentOwner: ownerID,
       },
     });
-
     console.log('Created Job:', response.data);
     res.json(response.data);
   } catch (error) {
@@ -141,6 +190,11 @@ app.post('/create-job', checkAccessToken, async (req, res) => {
     res.status(500).json({ error: 'Failed to create job' });
   }
 });
+
+
+
+
+
 
 
 
@@ -201,11 +255,12 @@ const jobData = {
 };
 
 
+
+
 // Assume you have the necessary setup for accessToken, ownerId, and other configurations
-app.get('/get-report-metadata', checkAccessToken, async (req, res) => {
+app.get('/get-report', checkAccessToken, async (req, res) => {
   try {
-    // const {  reportId } = req.params;
-    const reportId="content_owner_estimated_revenue_a1"
+    const reportId = "content_owner_estimated_revenue_a1";
     const jobId = "4e055ed3-a7f3-41c8-b045-7a98b665bba6";
 
     const response = await axios.get(`https://youtubereporting.googleapis.com/v1/jobs/${jobId}/reports/${reportId}`, {
@@ -216,14 +271,16 @@ app.get('/get-report-metadata', checkAccessToken, async (req, res) => {
         onBehalfOfContentOwner: ownerID,
       },
     });
-
-    console.log('Report Metadata:', response.data);
+    console.log('Report:', response.data);
     res.json(response.data);
   } catch (error) {
-    console.error('Error fetching report metadata:', error.response.data);
-    res.status(500).json({ error: 'Failed to fetch report metadata' });
+    console.error('Error fetching report:', error.response.data);
+    res.status(500).json({ error: 'Failed to fetch report' });
   }
 });
+
+
+
 
 
 
