@@ -202,10 +202,10 @@ const jobData = {
 
 
 // Assume you have the necessary setup for accessToken, ownerId, and other configurations
-
-app.get('/get-report-metadata/:jobId/:reportId', checkAccessToken, async (req, res) => {
+app.get('/get-report-metadata/:reportId', checkAccessToken, async (req, res) => {
   try {
-    const {  reportId } = req.params;
+    // const {  reportId } = req.params;
+    const reportId="content_owner_estimated_revenue_a1"
     const jobId = "4e055ed3-a7f3-41c8-b045-7a98b665bba6";
 
     const response = await axios.get(`https://youtubereporting.googleapis.com/v1/jobs/${jobId}/reports/${reportId}`, {
@@ -213,7 +213,7 @@ app.get('/get-report-metadata/:jobId/:reportId', checkAccessToken, async (req, r
         Authorization: `Bearer ${accessToken}`,
       },
       params: {
-        onBehalfOfContentOwner: ownerId,
+        onBehalfOfContentOwner: ownerID,
       },
     });
 
