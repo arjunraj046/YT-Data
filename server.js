@@ -112,58 +112,9 @@ app.get('/youtube-report-types', checkAccessToken, async (req, res) => {
 });
 
 
-// app.post('/create-job', checkAccessToken, async (req, res) => {
-//   try {
-//     // const requestBody = {
-//     //   reportTypeId: 'content_owner_global_ad_revenue_summary_a1',
-//     //   job: {
-//     //     name: 'AdRevenueSummaryJob', 
-//     //     reportTypes: ['content_owner_global_ad_revenue_summary_a1'],
-//     //     startTime: '2023-01-01T00:00:00Z',
-//     //     endTime: '2023-02-28T23:59:59Z',
-//     //   },
-//     // };
-//     const requestBody = {
-//       reportTypeId: 'content_owner_global_ad_revenue_summary_a1',
-//       job: {
-//         reportTypes: ['content_owner_global_ad_revenue_summary_a1'],
-//         // You might need to adjust this according to your specific requirements
-//         // For instance, specifying a name might not be necessary or might need a different key
-//         name: 'AdRevenueSummaryJob',
-//         // Adjust the time range as needed
-//         startTime: '2023-01-01T00:00:00Z',
-//         endTime: '2023-02-28T23:59:59Z',
-//       },
-//     };
-
-//     const response = await axios.post('https://youtubereporting.googleapis.com/v1/jobs', requestBody, {
-//       headers: {
-//         Authorization: `Bearer ${accessToken}`,
-//         'Content-Type': 'application/json',
-//       },
-//       params: {
-//         onBehalfOfContentOwner: ownerID,
-//       },
-//     });
-
-//     console.log('Created Job:', response.data);
-//     res.json(response.data);
-//   } catch (error) {
-//     console.error('Error creating job:',error.response.data)
-//     res.status(500).json({ error: 'Failed to create job' });
-//   }
-// });
 
 
-
-
-
-
-
-
-
-
-app.post('/create-job', checkAccessToken, async (req, res) => {
+app.get('/create-job', checkAccessToken, async (req, res) => {
   try {
     const requestBody = {
       job: {
@@ -272,9 +223,11 @@ app.get('/get-report', checkAccessToken, async (req, res) => {
       },
     });
     console.log('Report:', response.data);
+    console.log("response :  " ,response);
     res.json(response.data);
   } catch (error) {
-    console.error('Error fetching report:', error.response.data);
+    console.error('Error fetching report:', error.response.data,error);
+    console.log("error : ",error);
     res.status(500).json({ error: 'Failed to fetch report' });
   }
 });
