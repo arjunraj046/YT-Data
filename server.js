@@ -187,6 +187,45 @@ app.get('/job-details/:jobId', checkAccessToken, async (req, res) => {
 });
 
 
+// Assuming your job data is stored in a variable named jobData
+
+const jobData = {
+  "jobs": [
+      {
+          "id": "4e055ed3-a7f3-41c8-b045-7a98b665bba6",
+          "reportTypeId": "content_owner_estimated_revenue_a1",
+          "name": "TEST",
+          "createTime": "2023-12-09T14:12:49Z"
+      }
+  ]
+};
+
+
+// Assume you have the necessary setup for accessToken, ownerId, and other configurations
+
+app.get('/get-report-metadata/:jobId/:reportId', checkAccessToken, async (req, res) => {
+  try {
+    const {  reportId } = req.params;
+    const jobId = "4e055ed3-a7f3-41c8-b045-7a98b665bba6";
+
+    const response = await axios.get(`https://youtubereporting.googleapis.com/v1/jobs/${jobId}/reports/${reportId}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      params: {
+        onBehalfOfContentOwner: ownerId,
+      },
+    });
+
+    console.log('Report Metadata:', response.data);
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error fetching report metadata:', error.response.data);
+    res.status(500).json({ error: 'Failed to fetch report metadata' });
+  }
+});
+
+
 
 
 
