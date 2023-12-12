@@ -127,7 +127,6 @@ const jobData = {
 // route to create a new job 
 app.get('/create-job', checkAccessToken, async (req, res) => {
   try {
-    // const ownerID = "Jgrl-IYF1196ZxijRcZLXQ"; // Assuming you have the ownerID
     const requestBody = {
       reportTypeId: 'content_owner_estimated_revenue_a1',
       reportTypes: ['content_owner_estimated_revenue_a1'],
@@ -143,61 +142,24 @@ app.get('/create-job', checkAccessToken, async (req, res) => {
       },
     });
     console.log("------------------------------------------------------------------------------");
-
     console.log('Created Job:', response.data);
     console.log("------------------------------------------------------------------------------");
-
     res.json(response.data);
   } catch (error) {
     console.log("------------------------------------------------------------------------------");
     console.error('Error creating job:', error);
-
     console.log("------------------------------------------------------------------------------");
-
     console.error('Error creating job:', error.response.data);
     console.log("------------------------------------------------------------------------------");
-
     res.status(500).json({ error: 'Failed to create job' });
   }
 });
 
-// app.get('/create-job', checkAccessToken, async (req, res) => {
-//   try {
-//     const ownerID = "Jgrl-IYF1196ZxijRcZLXQ"; // Assuming you have the ownerID
-//     const requestBody = {
-//       job: {
-//         reportTypeId: 'content_owner_estimated_revenue_a1',
-//         reportTypes: ['content_owner_estimated_revenue_a1'],
-//         startTime: '2023-10-01T00:00:00Z',
-//         endTime: '2023-11-28T23:59:59Z',
-//         name: 'AdRevenue',
-//       }
-//     };  
-
-//     const response = await axios.post('https://youtubereporting.googleapis.com/v1/jobs?onBehalfOfContentOwner=' + ownerID, requestBody, {
-//       headers: {
-//         Authorization: `Bearer ${accessToken}`,
-//         'Content-Type': 'application/json',
-//       },
-//     });
-
-//     console.log('Created Job:', response.data);
-//     res.json(response.data);
-//   } catch (error) {
-//     console.error('Error creating job:', error.response.data);
-//     res.status(500).json({ error: 'Failed to create job' });
-//   }
-// });
-
-
 // with job id and owner id fetching job report  GET https://youtubereporting.googleapis.com/v1/jobs/{jobId}/reports/{reportId}
-
-
 app.get('/get-report', checkAccessToken, async (req, res) => {
   try {
     const reportId = "content_owner_estimated_revenue_a1";
     const jobId = "4e055ed3-a7f3-41c8-b045-7a98b665bba6";
-    const ownerID = "Jgrl-IYF1196ZxijRcZLXQ"; // Assuming you have the ownerID
 
     const response = await axios.get(`https://youtubereporting.googleapis.com/v1/jobs/${jobId}/reports/${reportId}?onBehalfOfContentOwner=${ownerID}`, {
       headers: {
@@ -207,13 +169,11 @@ app.get('/get-report', checkAccessToken, async (req, res) => {
     console.log("------------------------------------------------------------------------------");
     console.log('Report:', response.data);
     console.log("------------------------------------------------------------------------------");
-
     res.json(response.data);
   } catch (error) {
     console.log("------------------------------------------------------------------------------");
     console.error('Error fetching report:', error.response.data, error);
     console.log("------------------------------------------------------------------------------");
-
     res.status(500).json({ error: 'Failed to fetch report' });
   }
 });
