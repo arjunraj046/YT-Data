@@ -181,9 +181,11 @@ app.get('/get-report', checkAccessToken, async (req, res) => {
   try {
     const reportId = "content_owner_estimated_revenue_a1";
     const jobId = "4e055ed3-a7f3-41c8-b045-7a98b665bba6";
-    const ownerID = "Jgrl-IYF1196ZxijRcZLXQ"; // Assuming you have the ownerID
+    const ownerID = "Jgrl-IYF1196ZxijRcZLXQ"; 
+    
+    // Assuming you have the ownerID
 
-    const response = await axios.get(`https://youtubereporting.googleapis.com/v1/jobs/${jobId}/reports/${reportId}?onBehalfOfContentOwner=${ownerID}`, {
+    const response = await axios.get(`https://youtubereporting.googleapis.com/v1/jobs/${jobId}/reports/${reportId}?onBehalfOfContentOwner=Jgrl-IYF1196ZxijRcZLXQ`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
