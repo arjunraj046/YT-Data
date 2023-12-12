@@ -127,24 +127,24 @@ const jobData = {
 // route to create a new job 
 app.get('/create-job', checkAccessToken, async (req, res) => {
   try {
-      const requestBody = {
-        job: {
-          reportTypeId: 'content_owner_estimated_revenue_a1',
-          reportTypes: ['content_owner_estimated_revenue_a1'],
-          startTime: '2023-10-01T00:00:00Z',
-          endTime: '2023-11-28T23:59:59Z',
-          name: 'AdRevenue',
-        }
-      };  
-      const response = await axios.post('https://youtubereporting.googleapis.com/v1/jobs', requestBody, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-        params: {
-          onBehalfOfContentOwner: ownerID,
-        },
-      });
+    const ownerID = "Jgrl-IYF1196ZxijRcZLXQ"; // Assuming you have the ownerID
+    const requestBody = {
+      job: {
+        reportTypeId: 'content_owner_estimated_revenue_a1',
+        reportTypes: ['content_owner_estimated_revenue_a1'],
+        startTime: '2023-10-01T00:00:00Z',
+        endTime: '2023-11-28T23:59:59Z',
+        name: 'AdRevenue',
+      }
+    };  
+
+    const response = await axios.post('https://youtubereporting.googleapis.com/v1/jobs?onBehalfOfContentOwner=' + ownerID, requestBody, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
     console.log('Created Job:', response.data);
     res.json(response.data);
   } catch (error) {
@@ -153,28 +153,28 @@ app.get('/create-job', checkAccessToken, async (req, res) => {
   }
 });
 
+
 // with job id and owner id fetching job report 
 app.get('/get-report', checkAccessToken, async (req, res) => {
   try {
     const reportId = "content_owner_estimated_revenue_a1";
     const jobId = "4e055ed3-a7f3-41c8-b045-7a98b665bba6";
-    const response = await axios.get(`https://youtubereporting.googleapis.com/v1/jobs/${jobId}/reports/${reportId}`, {
+    const ownerID = "Jgrl-IYF1196ZxijRcZLXQ"; // Assuming you have the ownerID
+
+    const response = await axios.get(`https://youtubereporting.googleapis.com/v1/jobs/${jobId}/reports/${reportId}?onBehalfOfContentOwner=${ownerID}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-      params: {
-        onBehalfOfContentOwner: ownerID,
-      },
     });
+
     console.log('Report:', response.data);
-    console.log("response :  " ,response);
     res.json(response.data);
   } catch (error) {
-    console.error('Error fetching report:', error.response.data,error);
-    console.log("error : ",error);
+    console.error('Error fetching report:', error.response.data, error);
     res.status(500).json({ error: 'Failed to fetch report' });
   }
 });
+
 
 // 404
 app.use((req, res) => {
