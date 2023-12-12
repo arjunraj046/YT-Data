@@ -13,17 +13,14 @@ const CLIENT_ID = '327277406160-7oddheciuo5m459o6cfqqobf7cclhnmp.apps.googleuser
 const CLIENT_SECRET = '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';
 const REDIRECT_URL = 'https://yt-data.onrender.com/oauth2callback';
 let baseURL = "https://www.googleapis.com/youtube/partner/v1/";
-
 const oauth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URL);
-
 const scopes = [
   'https://www.googleapis.com/auth/youtube.readonly',
   'https://www.googleapis.com/auth/youtube',
   'https://www.googleapis.com/auth/yt-analytics.readonly',
   'https://www.googleapis.com/auth/yt-analytics-monetary.readonly'
 ];
-
-
+ 
 const refreshAccessToken = async () => {
   console.log("Creating Refresh Token 🤩🤩🤩");
   try {
@@ -35,7 +32,7 @@ const refreshAccessToken = async () => {
     console.error('Error refreshing access token:', error);
   }
 };
-
+ 
 const checkAccessToken = async (req, res, next) => {
   const now = Date.now();
   console.log("Checking Token 🧐🧐🧐🧐🧐");
