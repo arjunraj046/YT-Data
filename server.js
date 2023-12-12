@@ -9,13 +9,9 @@ let accessToken;
 let refreshToken;
 
 const ownerID = "Jgrl-IYF1196ZxijRcZLXQ";
-
 const CLIENT_ID = '327277406160-7oddheciuo5m459o6cfqqobf7cclhnmp.apps.googleusercontent.com';
-
 const CLIENT_SECRET = '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';
-
 const REDIRECT_URL = 'https://yt-data.onrender.com/oauth2callback';
-
 let baseURL = "https://www.googleapis.com/youtube/partner/v1/";
 
 const oauth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URL);
@@ -28,10 +24,8 @@ const scopes = [
 ];
 
 
-
 const refreshAccessToken = async () => {
   console.log("Creating Refresh Token 🤩🤩🤩");
-
   try {
     const { tokens } = await oauth2Client.refreshToken(refreshToken);
     oauth2Client.setCredentials(tokens);
@@ -42,8 +36,6 @@ const refreshAccessToken = async () => {
   }
 };
 
-
-
 const checkAccessToken = async (req, res, next) => {
   const now = Date.now();
   console.log("Checking Token 🧐🧐🧐🧐🧐");
@@ -52,11 +44,7 @@ const checkAccessToken = async (req, res, next) => {
   }
   next();
 };
-
-
-
-
-
+// creating auth url for the client 
 app.get('/auth-url', (req, res) => {
   console.log("Google Auth");
   const authUrl = oauth2Client.generateAuthUrl({
@@ -66,10 +54,7 @@ app.get('/auth-url', (req, res) => {
   });
   res.send({ url: authUrl });
 });
-
-
-
-
+// Catch the tokens with redirect url ...
 app.get('/oauth2callback', async (req, res) => {
   const { code } = req.query;
 
@@ -89,10 +74,7 @@ app.get('/oauth2callback', async (req, res) => {
     res.status(500).send('Authorization failed!');
   }
 });
-
-
-
-
+// fetch the types of reports 
 app.get('/youtube-report-types', checkAccessToken, async (req, res) => {
   try {
     const response = await axios.get('https://youtubereporting.googleapis.com/v1/reportTypes', {
@@ -110,18 +92,7 @@ app.get('/youtube-report-types', checkAccessToken, async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch report types' });
   }
 });
-
-
-
-
-
-
-
-
-
-
-
-
+// response get the listed job which already created 
 app.get('/list-jobs', checkAccessToken, async (req, res) => {
   try {
     const response = await axios.get('https://youtubereporting.googleapis.com/v1/jobs', {
@@ -140,33 +111,7 @@ app.get('/list-jobs', checkAccessToken, async (req, res) => {
     res.status(500).json({ error: 'Failed to list jobs' });
   }
 });
-
-
-app.get('/job-details/:jobId', checkAccessToken, async (req, res) => {
-
-  try {
-    const jobId = req.params.jobId; // Extract the job ID from the request params
-
-    const response = await axios.get(`https://youtubereporting.googleapis.com/v1/jobs/${jobId}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-      params: {
-        onBehalfOfContentOwner: ownerID,
-      },
-    });
-
-    console.log('Job Details:', response.data);
-    res.json(response.data);
-  } catch (error) {
-    console.error('Error fetching job details:', error.response.data);
-    res.status(500).json({ error: 'Failed to fetch job details' });
-  }
-});
-
-
-// Assuming your job data is stored in a variable named jobData
-
+// list jobs response hard code 
 const jobData = {
   "jobs": [
       {
@@ -177,24 +122,46 @@ const jobData = {
       }
   ]
 };
+// app.get('/job-details/:jobId', checkAccessToken, async (req, res) => {
+//   try {
+//     const jobId = req.params.jobId; // Extract the job ID from the request params
+//     const response = await axios.get(`https://youtubereporting.googleapis.com/v1/jobs/${jobId}`, {
+//       headers: {
+//         Authorization: `Bearer ${accessToken}`,
+//       },
+//       params: {
+//         onBehalfOfContentOwner: ownerID,
+//       },
+//     });
+//     console.log('Job Details:', response.data);
+//     res.json(response.data);
+//   } catch (error) {
+//     console.error('Error fetching job details:', error.response.data);
+//     res.status(500).json({ error: 'Failed to fetch job details' });
+//   }
+// });
 
-
-
+// route to create a new job 
 app.get('/create-job', checkAccessToken, async (req, res) => {
   try {
-    const requestBody = {
-      job: {
-        reportTypeId: 'content_owner_estimated_revenue_a1',
-        reportTypes: ['content_owner_estimated_revenue_a1'],
-        startTime: '2023-10-01T00:00:00Z',
-        endTime: '2023-11-28T23:59:59Z',
-        name: 'AdRevenue',
-      }
-    };
-    const response = await axios.post('https://youtubereporting.googleapis.com/v1/jobs', requestBody,
-     { headers: { Authorization: `Bearer ${accessToken}`,'Content-Type': 'application/json',},
-      params: {    onBehalfOfContentOwner: ownerID,},
-    });
+      const requestBody = {
+        job: {
+          reportTypeId: 'content_owner_estimated_revenue_a1',
+          reportTypes: ['content_owner_estimated_revenue_a1'],
+          startTime: '2023-10-01T00:00:00Z',
+          endTime: '2023-11-28T23:59:59Z',
+          name: 'AdRevenue',
+        }
+      };  
+      const response = await axios.post('https://youtubereporting.googleapis.com/v1/jobs', requestBody, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        params: {
+          onBehalfOfContentOwner: ownerID,
+        },
+      });
     console.log('Created Job:', response.data);
     res.json(response.data);
   } catch (error) {
@@ -202,8 +169,7 @@ app.get('/create-job', checkAccessToken, async (req, res) => {
     res.status(500).json({ error: 'Failed to create job' });
   }
 });
-
-// Assume you have the necessary setup for accessToken, ownerId, and other configurations
+// with job id and owner id fetching job report 
 app.get('/get-report', checkAccessToken, async (req, res) => {
   try {
     const reportId = "content_owner_estimated_revenue_a1";
@@ -226,18 +192,10 @@ app.get('/get-report', checkAccessToken, async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch report' });
   }
 });
-
-
-
-
-
-
-
-
+// 404
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
-
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
