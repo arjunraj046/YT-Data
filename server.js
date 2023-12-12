@@ -143,7 +143,7 @@ app.post('/create-job', checkAccessToken, async (req, res) => {
     res.json(response.data);
   } catch (error) {
     console.log("------------------------------------------------------------------------------");
-    console.error('Error creating job:', error.response.data);
+    console.error('Error creating job:::::', error.response.data);
     console.log("------------------------------------------------------------------------------");
     res.status(500).json({ error: 'Failed to create job' });
   }
@@ -153,8 +153,10 @@ app.post('/create-job', checkAccessToken, async (req, res) => {
 // with job id and owner id fetching job report  
 app.get('/get-report', checkAccessToken, async (req, res) => {
   try {
+    
     const reportId = "content_owner_estimated_revenue_a1";
     const jobId = "4e055ed3-a7f3-41c8-b045-7a98b665bba6";
+
     const response = await axios.get(`https://youtubereporting.googleapis.com/v1/jobs/${jobId}/reports/${reportId}?onBehalfOfContentOwner=${ownerID}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -166,7 +168,7 @@ app.get('/get-report', checkAccessToken, async (req, res) => {
     res.json(response.data);
   } catch (error) {
     console.log("------------------------------------------------------------------------------");
-    console.error('Error fetching report:', error.response.data, error);
+    console.error('Error fetching report:::::', error.response.data, error);
     console.log("------------------------------------------------------------------------------");
     res.status(500).json({ error: 'Failed to fetch report' });
   }
