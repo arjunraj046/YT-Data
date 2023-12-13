@@ -189,17 +189,14 @@ app.get('/get-report', checkAccessToken, async (req, res) => {
         Authorization: `Bearer ${accessToken}`,
       },
     });
-
     console.log("------------------------------------------------------------------------------");
     console.log('Report:', response.data);
     console.log("------------------------------------------------------------------------------");
-
     res.json(response.data);
   } catch (error) {
     console.log("------------------------------------------------------------------------------");
     console.error('Error fetching report:', error.response.data, error);
     console.log("------------------------------------------------------------------------------");
-
     res.status(500).json({ error: 'Failed to fetch report' });
   }
 });
