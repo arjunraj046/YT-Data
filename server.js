@@ -181,6 +181,7 @@ axios({
   responseType: 'stream', 
 })
   .then(response => {
+    console.log(response);
     const fileStream = require('fs').createWriteStream(downloadPath);
     response.data.pipe(fileStream);
 
