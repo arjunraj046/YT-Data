@@ -126,7 +126,7 @@ const jobData = {
 // route to create a new job 
 app.post('/create-job', checkAccessToken, async (req, res) => {
   try {
-    const ownerID = "Jgrl-IYF1196ZxijRcZLXQ"; // Assuming you have the ownerID
+    const ownerID = "Jgrl-IYF1196ZxijRcZLXQ"; 
     const requestBody = {
       reportTypeId: 'content_owner_estimated_revenue_a1',
       reportTypes: ['content_owner_estimated_revenue_a1'],
@@ -184,7 +184,6 @@ app.get('/get-report', checkAccessToken, async (req, res) => {
     const jobId = "4e055ed3-a7f3-41c8-b045-7a98b665bba6";
     const ownerID = "Jgrl-IYF1196ZxijRcZLXQ"; 
     
-    // Assuming you have the ownerID
     const response = await axios.get(`https://youtubereporting.googleapis.com/v1/jobs/${jobId}/reports/${reportId}?onBehalfOfContentOwner=Jgrl-IYF1196ZxijRcZLXQ`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
