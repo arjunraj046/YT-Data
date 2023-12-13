@@ -133,7 +133,6 @@ app.post('/create-job', checkAccessToken, async (req, res) => {
       startTime: '2023-11-01T00:00:00Z',
       endTime: '2023-11-28T23:59:59Z',
       name: 'AdRevenue_unique',
-      // Modify the job name to ensure uniqueness
     }
     const response = await axios.post(`https://youtubereporting.googleapis.com/v1/jobs?onBehalfOfContentOwner=${ownerID}`, requestBody, {
       headers: {
@@ -141,7 +140,7 @@ app.post('/create-job', checkAccessToken, async (req, res) => {
         'Content-Type': 'application/json',
       },
     });
-    
+    console.log();
     console.log("------------------------------------------------------------------------------");
     console.log('Created Job:', response.data);
     console.log("------------------------------------------------------------------------------");
