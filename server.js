@@ -174,6 +174,10 @@ app.get("/getreport",checkAccessToken,(req,res)=>{
   console.log("download URL is ::",reports[num].downloadUrl)
   const downloadPath = "C:\Users\arjun\OneDrive\Documents\GitHub\YT-Data\downloads"
 
+  const headers = {
+    'Authorization': accessToken, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
+    'Content-Type': 'application/json', // Adjust the Content-Type as per your API requirements
+  };
 axios({
   method: 'get',
   url: reports[num].downloadUrl,
@@ -182,16 +186,25 @@ axios({
 })
   .then(response => {
     console.log(response);
+
+
+
+    console.log(JSON.stringify(response.data, null, 2)); // Adjust indentation for formatting
+
+      // Send the response back to the client if needed
+      res.json(response.data);
+    // // Send the response back to the client if needed
+    // res.json(response.data);
     const fileStream = require('fs').createWriteStream(downloadPath);
     response.data.pipe(fileStream);
 
-    fileStream.on('finish', () => {
-      console.log('File downloaded successfully');
-    });
+    // fileStream.on('finish', () => {
+    //   console.log('File downloaded successfully');
+    // });
 
-    fileStream.on('error', err => {
-      console.error('Error writing to file:', err);
-    });
+    // fileStream.on('error', err => {
+    //   console.error('Error writing to file:', err);
+    // });
   })
   .catch(error => {
     console.error('Error downloading file:', error);
@@ -210,11 +223,6 @@ axios({
   //     // Handle error
   //     console.error('Error:', error);
   //   });
-
-
-
-
-
 })
 
 
