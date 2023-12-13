@@ -22,6 +22,8 @@ const scopes = [
   'https://www.googleapis.com/auth/yt-analytics-monetary.readonly' 
 ]
 
+let reports
+
 const refreshAccessToken = async () => {
   console.log("Creating Refresh Token 🤩🤩🤩");
   try {
@@ -139,11 +141,10 @@ app.post('/create-job', checkAccessToken, async (req, res) => {
   }
 });
 
-
 // check with out report id 
 app.get('/report1', checkAccessToken, async (req, res) => {
   try {
-    const reportId = "content_owner_estimated_revenue_a1";
+    // const reportId = "content_owner_estimated_revenue_a1";
     const jobId = "4e055ed3-a7f3-41c8-b045-7a98b665bba6";
     const ownerID = "Jgrl-IYF1196ZxijRcZLXQ"; 
     let url =        `https://youtubereporting.googleapis.com/v1/jobs/${jobId}/reports?onBehalfOfContentOwner=${ownerID}`;
@@ -155,6 +156,8 @@ app.get('/report1', checkAccessToken, async (req, res) => {
     });
     console.log("------------------------------------------------------------------------------");
     console.log('Report:', response.data);
+
+    reports = response.data?.reports;
     console.log("------------------------------------------------------------------------------");
     res.json(response.data);
   } catch (error) {
@@ -165,154 +168,57 @@ app.get('/report1', checkAccessToken, async (req, res) => {
   }
 });
 
-// check with report id 
-app.get('/report2', checkAccessToken, async (req, res) => {
-  try {
-    const reportId = "content_owner_estimated_revenue_a1";
-    const jobId = "4e055ed3-a7f3-41c8-b045-7a98b665bba6";
-    const ownerID = "Jgrl-IYF1196ZxijRcZLXQ"; 
-    let url =        `https://youtubereporting.googleapis.com/v1/jobs/${jobId}/reports/${reportId}?onBehalfOfContentOwner=${ownerID}`;
-    console.log(url)
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+
+app.get("/getreport",checkAccessToken,(req,res)=>{
+  let num = 1
+  console.log("download URL is ::",reports[num].downloadUrl)
+  const downloadPath = "C:\Users\arjun\OneDrive\Documents\GitHub\YT-Data\downloads"
+
+axios({
+  method: 'get',
+  url: reports[num].downloadUrl,
+  headers: headers,
+  responseType: 'stream', 
+})
+  .then(response => {
+    const fileStream = require('fs').createWriteStream(downloadPath);
+    response.data.pipe(fileStream);
+
+    fileStream.on('finish', () => {
+      console.log('File downloaded successfully');
     });
-    console.log("------------------------------------------------------------------------------");
-    console.log('Report:', response.data);
-    console.log("------------------------------------------------------------------------------");
-    res.json(response.data);
-  } catch (error) {
-    console.log("------------------------------------------------------------------------------");
-    console.error('Error fetching report:', error.response.data, error);
-    console.log("------------------------------------------------------------------------------");
-    res.status(500).json({ error: 'Failed to fetch report' });
-  }
-});
 
-// // list jobs response hard code 
-// const jobData = {
-//   "jobs": [
-//       {
-//           "id": "4e055ed3-a7f3-41c8-b045-7a98b665bba6",
-//           "reportTypeId": "content_owner_estimated_revenue_a1",
-//           "name": "TEST",
-//           "createTime": "2023-12-09T14:12:49Z"
-//       }
-//   ]
-// }
-
-// // route to create a new job 
-// app.post('/create-job', checkAccessToken, async (req, res) => {
-//   try {
-//     const param = {
-//       'id':'12323TH',
-//       'reportTypeId':'content_owner_estimated_revenue_a1',
-//       'name':'Test1',
-//       'createTime':new Date('2023-12-01').toISOString(),
-//       'expireTime':new Date('2023-12-11').toISOString(),
-//       'systemManaged':false
-//     }
-//     const response = await axios.post(`https://youtubereporting.googleapis.com/v1/jobs?onBehalfOfContentOwner=${ownerID}`, param, {
-//       headers: {
-//         Authorization: `Bearer ${accessToken}`,
-//         'Content-Type': 'application/json',
-//       },
-//     })
-//     console.log("------------------------------------------------------------------------------");
-//     console.log('Created Job:', response.data);
-//     console.log("------------------------------------------------------------------------------");
-//     res.json(response.data);
-
-//     // const requestBody = {
-//     //   reportTypeId: 'content_owner_estimated_revenue_a1',
-//     //   reportTypes: ['content_owner_estimated_revenue_a1'],
-//     //   startTime: '2023-11-01T00:00:00Z',
-//     //   endTime: '2023-11-28T23:59:59Z',
-//     //   name: 'AdRevenue_unique',
-//     // }
-
-//   // .then((response) => {
-//       //   console.log('Response:', response.data);
-//       //   // Handle response data as needed
-//       // })
-//       // .catch((error) => {
-//       //   console.error('Error:', error.response.data || error.message);
-//       //   // Handle errors
-//       // });
-    
-//     // const response = await axios.post(`https://youtubereporting.googleapis.com/v1/jobs?onBehalfOfContentOwner=${ownerID}`, requestBody, {
-//     //   headers: {
-//     //     Authorization: `Bearer ${accessToken}`,
-//     //     'Content-Type': 'application/json',
-//     //   },
-//     // });
-//   } catch (error) {
-//     console.log("------------------------------------------------------------------------------");
-//     console.error('Error creating job:::::', error.response.data);
-//     console.log("------------------------------------------------------------------------------");
-//     res.status(500).json({ error: 'Failed to create job' });
-//   }
-// });
-
-// app.get('/get-report', checkAccessToken, async (req, res) => {
-//   try {
-//     const reportId = "content_owner_estimated_revenue_a1";
-//     const jobId = "4e055ed3-a7f3-41c8-b045-7a98b665bba6";
-//     const ownerID = "Jgrl-IYF1196ZxijRcZLXQ"; 
-//     let url =        `https://youtubereporting.googleapis.com/v1/jobs/${jobId}/reports/${reportId}?onBehalfOfContentOwner=${ownerID}`;
-//     // let urlorginal = `https://youtubereporting.googleapis.com/v1/jobs/${jobId}/reports/${reportId}?onBehalfOfContentOwner=Jgrl-IYF1196ZxijRcZLXQ`
-//     // https://youtubereporting.googleapis.com/v1/jobs/4e055ed3-a7f3-41c8-b045-7a98b665bba6/reports/content_owner_estimated_revenue_a1?onBehalfOfContentOwner=Jgrl-IYF1196ZxijRcZLXQ
-    
-    
-//     console.log(url);
+    fileStream.on('error', err => {
+      console.error('Error writing to file:', err);
+    });
+  })
+  .catch(error => {
+    console.error('Error downloading file:', error);
+  });
+  // axios({
+  //   method: 'post', 
+  //   url: reports[num].downloadUrl,
+  //   headers: headers,
+  //   data: requestData,
+  // })
+  //   .then(response => {
+  //     // Handle successful response
+  //     console.log('Response:', response.data);
+  //   })
+  //   .catch(error => {
+  //     // Handle error
+  //     console.error('Error:', error);
+  //   });
 
 
 
 
 
+})
 
 
-//     const response = await axios.get(url, {
-//       headers: {
-//         Authorization: `Bearer ${accessToken}`,
-//       },
-//     });
-//     console.log("------------------------------------------------------------------------------");
-//     console.log('Report:', response.data);
-//     console.log("------------------------------------------------------------------------------");
-//     res.json(response.data);
-//   } catch (error) {
-//     console.log("------------------------------------------------------------------------------");
-//     console.error('Error fetching report:', error.response.data, error);
-//     console.log("------------------------------------------------------------------------------");
-//     res.status(500).json({ error: 'Failed to fetch report' });
-//   }
-// });
 
-// // with job id and owner id fetching job report  
-// app.get('/get-report', checkAccessToken, async (req, res) => {
-//   try {
-    
-//     const reportId = "content_owner_estimated_revenue_a1";
-//     const jobId = "4e055ed3-a7f3-41c8-b045-7a98b665bba6";
 
-//     const response = await axios.get(`https://youtubereporting.googleapis.com/v1/jobs/${jobId}/reports/${reportId}?onBehalfOfContentOwner=${ownerID}`, {
-//       headers: {
-//         Authorization: `Bearer ${accessToken}`,
-//       },
-//     });
-//     console.log("------------------------------------------------------------------------------");
-//     console.log('Report:', response.data);
-//     console.log("------------------------------------------------------------------------------");
-//     res.json(response.data);
-//   } catch (error) {
-//     console.log("------------------------------------------------------------------------------");
-//     console.error('Error fetching report:::::', error.response.data, error);
-//     console.log("------------------------------------------------------------------------------");
-//     res.status(500).json({ error: 'Failed to fetch report' });
-//   }
-// });
 
 // 404
 app.use((req, res) => {
