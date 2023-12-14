@@ -168,68 +168,46 @@ app.get('/report1', checkAccessToken, async (req, res) => {
   }
 });
 
-
-app.get("/getreport",checkAccessToken,(req,res)=>{
-  let num = 1
-  console.log("download URL is ::",reports[num].downloadUrl)
-  const downloadPath = "C:\Users\arjun\OneDrive\Documents\GitHub\YT-Data\downloads"
-
+app.get("/getreport", checkAccessToken, (req, res) => {
+  let num = 0;
+  const downloadPath = "./downloads"; 
+  if (!fs.existsSync(downloadPath)) {
+    fs.mkdirSync(downloadPath);
+  }
   const headers = {
-    'Authorization': accessToken, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
-    'Content-Type': 'application/json', // Adjust the Content-Type as per your API requirements
+    'Authorization': accessToken,
+    'Content-Type': 'application/json',
   };
-axios({
-  method: 'get',
-  url: reports[num].downloadUrl,
-  headers: headers,
-  responseType: 'stream', 
-})
-  .then(response => {
-    console.log(response);
-
-
-
-    console.log(JSON.stringify(response.data, null, 2)); // Adjust indentation for formatting
-
-      // Send the response back to the client if needed
-      res.json(response.data);
-    // // Send the response back to the client if needed
-    // res.json(response.data);
-    const fileStream = require('fs').createWriteStream(downloadPath);
-    response.data.pipe(fileStream);
-
-    // fileStream.on('finish', () => {
-    //   console.log('File downloaded successfully');
-    // });
-
-    // fileStream.on('error', err => {
-    //   console.error('Error writing to file:', err);
-    // });
+  axios({
+    method: 'get',
+    url: reports[num].downloadUrl,
+    headers: headers,
+    responseType: 'stream'
   })
-  .catch(error => {
-    console.error('Error downloading file:', error);
-  });
-  // axios({
-  //   method: 'post', 
-  //   url: reports[num].downloadUrl,
-  //   headers: headers,
-  //   data: requestData,
-  // })
-  //   .then(response => {
-  //     // Handle successful response
-  //     console.log('Response:', response.data);
-  //   })
-  //   .catch(error => {
-  //     // Handle error
-  //     console.error('Error:', error);
-  //   });
-})
+    .then(response => {
+      const filePath = path.join(downloadPath, `report_${num}.pdf`);
+      const writer = fs.createWriteStream(filePath);
+      response.data.pipe(writer);
+      writer.on('finish', () => {
+        console.log('File downloaded successfully');
+        res.download(filePath, `report_${num}.pdf`, (err) => {
+          if (err) {
+            console.error('Error sending file:', err);
+            res.status(500).send('Error sending file');
+          } else {
+            fs.unlinkSync(filePath); 
+          }
+        });
+      });
+      num++
+    })
+    .catch(error => {
+      console.error('Error downloading file:', error);
+      res.status(500).send('Error downloading file');
+    });
+});
 
 
-
-
-
-// 404
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
