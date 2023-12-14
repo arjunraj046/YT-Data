@@ -3,6 +3,7 @@ const { google } = require('googleapis')
 const axios = require('axios')
 const path = require('path');
 const fs = require('fs');
+const AdmZip = require('adm-zip');
 
 
 const app = express()
@@ -185,29 +186,35 @@ app.get("/getreport", checkAccessToken, (req, res) => {
     method: 'get',
     url: reports[num].downloadUrl,
     headers: headers,
-    responseType: 'stream'
+    responseType: 'arraybuffer'  //'stream'
   })
     .then(response => {
-      const filePath = path.join(downloadPath, `report_${num}.csv`);
-      const writer = fs.createWriteStream(filePath);
-      response.data.pipe(writer);
-      writer.on('finish', () => {
-        console.log('File downloaded successfully');
-        res.download(filePath, `report_${num}.pdf`, (err) => {
-          if (err) {
-            console.error('Error sending file:', err);
-            res.status(500).send('Error sending file');
-          } else {
-            fs.unlinkSync(filePath); 
-          }
-        });
+      
+      const filePath = path.join(downloadPath, `report_${num}.zip`);
+      fs.writeFileSync(filePath, Buffer.from(response.data));
+      
+      const zip = new AdmZip(filePath);
+      const zipEntries = zip.getEntries();
+
+      const extractDir = path.join(downloadPath, `extracted_${num}`);
+      zip.extractAllTo(extractDir, true);
+
+      const extractedFiles = fs.readdirSync(extractDir);
+      const filesToSend = [];
+
+      extractedFiles.forEach(file => {
+        const fileData = fs.readFileSync(path.join(extractDir, file));
+        filesToSend.push({ fileName: file, data: fileData });
       });
+
+      // You might want to set appropriate headers here before sending the files
+      res.status(200).json(filesToSend);
       num++
     })
     .catch(error => {
       console.log("------------------------------------------------------------------------------");
-      console.error('Error downloading file:', error);
-      res.status(500).send('Error downloading file');
+      console.error('Error downloading/extracting file:', error);
+      res.status(500).send('Error downloading/extracting file');
       console.log("------------------------------------------------------------------------------");
     });
 });
