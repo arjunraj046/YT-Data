@@ -649,3 +649,50 @@ let rere={
         }
     ]
 }
+
+
+
+
+
+
+const handleRowClicked = (row) => {
+    console.log('Row clicked:', row.id);
+  };
+
+
+
+  return (
+    <DataTable
+      title="Your Data Table"
+      columns={columns}
+      data={data}
+      selectableRows 
+      onRowClicked={handleRowClicked} 
+    />
+  );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// let data =  
+
+
+
+
+
+
+
+

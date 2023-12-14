@@ -10,7 +10,7 @@ const app = express()
 const PORT = 3000
 
 let accessToken
-let refreshToken
+let refreshToken = '1//0gf0BfMM7C231CgYIARAAGBASNwF-L9IrCH02umiHNwDqDkiHuG5H0lyO_NFidERn7uvlnWliuZc3m2EARr9SPKh3hyVvkWHoSYQ'
 
 const ownerID = "Jgrl-IYF1196ZxijRcZLXQ"
 const CLIENT_ID = '327277406160-7oddheciuo5m459o6cfqqobf7cclhnmp.apps.googleusercontent.com'
@@ -121,7 +121,8 @@ app.post('/create-job', checkAccessToken, async (req, res) => {
   try {
     const param = {
       'id':'12323TH',
-      'reportTypeId':'content_owner_estimated_revenue_a1',
+      // 'reportTypeId':'content_owner_estimated_revenue_a1',
+      'reportTypeId':'content_owner_global_ad_revenue_summary_a1',
       'name':'Test1',
       'createTime':new Date('2023-12-01').toISOString(),
       'expireTime':new Date('2023-12-11').toISOString(),
@@ -171,6 +172,11 @@ app.get('/report1', checkAccessToken, async (req, res) => {
   }
 });
 
+app.get("/accesstoken",(req,res)=>{
+  checkAccessToken
+  res.send(accessToken)
+})
+
 app.get("/getreport", checkAccessToken, (req, res) => {
   let num = 0;
   const downloadPath = "./downloads"; 
@@ -186,7 +192,7 @@ app.get("/getreport", checkAccessToken, (req, res) => {
     method: 'get',
     url: reports[num].downloadUrl,
     headers: headers,
-    responseType: 'arraybuffer'  //'stream'
+    // responseType: 'arraybuffer'  //'stream'
   })
     .then(response => {
       
