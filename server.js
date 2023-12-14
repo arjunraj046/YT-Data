@@ -151,7 +151,7 @@ app.get('/report1', checkAccessToken, async (req, res) => {
     const jobId = "4e055ed3-a7f3-41c8-b045-7a98b665bba6";
     const ownerID = "Jgrl-IYF1196ZxijRcZLXQ"; 
     let url =        `https://youtubereporting.googleapis.com/v1/jobs/${jobId}/reports?onBehalfOfContentOwner=${ownerID}`;
-    console.log(url);
+    console.log("URL is this ::",url);
     const response = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -181,6 +181,7 @@ app.get("/getreport", checkAccessToken, (req, res) => {
     'Authorization': accessToken,
     'Content-Type': 'application/json',
   };
+  console.log("download url:",reports[num].downloadUrl);
   axios({
     method: 'get',
     url: reports[num].downloadUrl,
@@ -205,8 +206,10 @@ app.get("/getreport", checkAccessToken, (req, res) => {
       num++
     })
     .catch(error => {
+      console.log("------------------------------------------------------------------------------");
       console.error('Error downloading file:', error);
       res.status(500).send('Error downloading file');
+      console.log("------------------------------------------------------------------------------");
     });
 });
 
