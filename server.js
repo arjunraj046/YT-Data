@@ -147,7 +147,6 @@ app.post('/create-job', checkAccessToken, async (req, res) => {
 // check with out report id 
 app.get('/report1', checkAccessToken, async (req, res) => {
   try {
-    // const reportId = "content_owner_estimated_revenue_a1";
     const jobId = "4e055ed3-a7f3-41c8-b045-7a98b665bba6";
     const ownerID = "Jgrl-IYF1196ZxijRcZLXQ"; 
     let url =        `https://youtubereporting.googleapis.com/v1/jobs/${jobId}/reports?onBehalfOfContentOwner=${ownerID}`;
@@ -189,7 +188,7 @@ app.get("/getreport", checkAccessToken, (req, res) => {
     responseType: 'stream'
   })
     .then(response => {
-      const filePath = path.join(downloadPath, `report_${num}.pdf`);
+      const filePath = path.join(downloadPath, `report_${num}.csv`);
       const writer = fs.createWriteStream(filePath);
       response.data.pipe(writer);
       writer.on('finish', () => {
