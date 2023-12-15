@@ -1,16 +1,12 @@
 const express = require('express')
 const { google } = require('googleapis')
 const axios = require('axios')
-const path = require('path');
-const fs = require('fs');
-const AdmZip = require('adm-zip');
-
 
 const app = express()
 const PORT = 3000
 
 let accessToken
-let refreshToken = '1//0gf0BfMM7C231CgYIARAAGBASNwF-L9IrCH02umiHNwDqDkiHuG5H0lyO_NFidERn7uvlnWliuZc3m2EARr9SPKh3hyVvkWHoSYQ'
+let refreshToken = '1//0g_Sm99yCDINpCgYIARAAGBASNwF-L9Irg26Lozb5vwIpIG4GAnh7qz958n6rSTjEZTRJFwFUtjHn9sYclZVEfPO5GJR-BCQNHjs'
 
 const ownerID = "Jgrl-IYF1196ZxijRcZLXQ"
 const CLIENT_ID = '327277406160-7oddheciuo5m459o6cfqqobf7cclhnmp.apps.googleusercontent.com'
@@ -97,7 +93,7 @@ app.get('/youtube-report-types', checkAccessToken, async (req, res) => {
   }
 });
 
-// response get the listed job which already created 
+// get list of jobs which already created.....
 app.get('/list-jobs', checkAccessToken, async (req, res) => {
   try {
     const response = await axios.get('https://youtubereporting.googleapis.com/v1/jobs', {
@@ -116,16 +112,17 @@ app.get('/list-jobs', checkAccessToken, async (req, res) => {
   }
 });
 
-// route to create a new job 
+// route to create a new job.....
 app.post('/create-job', checkAccessToken, async (req, res) => {
   try {
     const param = {
       'id':'12323TH',
       // 'reportTypeId':'content_owner_estimated_revenue_a1',
-      'reportTypeId':'content_owner_global_ad_revenue_summary_a1',
-      'name':'Test1',
-      'createTime':new Date('2023-12-01').toISOString(),
-      'expireTime':new Date('2023-12-11').toISOString(),
+      // 'reportTypeId':'content_owner_global_ad_revenue_summary_a1',
+      'reportTypeId':'content_owner_ad_rates_a1',
+      'name':'adsRate',
+      'createTime':new Date('2023-11-01').toISOString(),
+      'expireTime':new Date('2023-11-30').toISOString(),
       'systemManaged':false
     }
     const response = await axios.post(`https://youtubereporting.googleapis.com/v1/jobs?onBehalfOfContentOwner=${ownerID}`, param, {
@@ -134,20 +131,19 @@ app.post('/create-job', checkAccessToken, async (req, res) => {
         'Content-Type': 'application/json',
       },
     })
-    console.log("------------------------------------------------------------------------------");
+    console.log("------------------------------------------------------------------------------------------------------------------");
     console.log('Created Job:', response.data);
-    console.log("------------------------------------------------------------------------------");
+    console.log("------------------------------------------------------------------------------------------------------------------");
     res.json(response.data);
   } catch (error) {
-    console.log("------------------------------------------------------------------------------");
+    console.log("------------------------------------------------------------------------------------------------------------------");
     console.error('Error creating job:::::', error.response.data);
-    console.log("------------------------------------------------------------------------------");
+    console.log("------------------------------------------------------------------------------------------------------------------");
     res.status(500).json({ error: 'Failed to create job' });
   }
 });
-
-// check with out report id 
-app.get('/report1', checkAccessToken, async (req, res) => {
+// report need to download and process
+app.get('/reports', checkAccessToken, async (req, res) => {
   try {
     const jobId = "4e055ed3-a7f3-41c8-b045-7a98b665bba6";
     const ownerID = "Jgrl-IYF1196ZxijRcZLXQ"; 
@@ -160,8 +156,6 @@ app.get('/report1', checkAccessToken, async (req, res) => {
     });
     console.log("------------------------------------------------------------------------------");
     console.log('Report:', response.data);
-
-    reports = response.data?.reports;
     console.log("------------------------------------------------------------------------------");
     res.json(response.data);
   } catch (error) {
@@ -172,64 +166,18 @@ app.get('/report1', checkAccessToken, async (req, res) => {
   }
 });
 
+
+
+
+// sending the token back ...
 app.get("/accesstoken",(req,res)=>{
   checkAccessToken
   res.send(accessToken)
 })
-
-app.get("/getreport", checkAccessToken, (req, res) => {
-  let num = 0;
-  const downloadPath = "./downloads"; 
-  if (!fs.existsSync(downloadPath)) {
-    fs.mkdirSync(downloadPath);
-  }
-  const headers = {
-    'Authorization': accessToken,
-    'Content-Type': 'application/json',
-  };
-  console.log("download url:",reports[num].downloadUrl);
-  axios({
-    method: 'get',
-    url: reports[num].downloadUrl,
-    headers: headers,
-    // responseType: 'arraybuffer'  //'stream'
-  })
-    .then(response => {
-      
-      const filePath = path.join(downloadPath, `report_${num}.zip`);
-      fs.writeFileSync(filePath, Buffer.from(response.data));
-      
-      const zip = new AdmZip(filePath);
-      const zipEntries = zip.getEntries();
-
-      const extractDir = path.join(downloadPath, `extracted_${num}`);
-      zip.extractAllTo(extractDir, true);
-
-      const extractedFiles = fs.readdirSync(extractDir);
-      const filesToSend = [];
-
-      extractedFiles.forEach(file => {
-        const fileData = fs.readFileSync(path.join(extractDir, file));
-        filesToSend.push({ fileName: file, data: fileData });
-      });
-
-      // You might want to set appropriate headers here before sending the files
-      res.status(200).json(filesToSend);
-      num++
-    })
-    .catch(error => {
-      console.log("------------------------------------------------------------------------------");
-      console.error('Error downloading/extracting file:', error);
-      res.status(500).send('Error downloading/extracting file');
-      console.log("------------------------------------------------------------------------------");
-    });
-});
-
-
+// 404
 app.use((req, res) => {
-  res.status(404).json({ error: 'Route not found' });
+  res.status(404).json({ error: 'Route not found 404...' });
 });
-
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
