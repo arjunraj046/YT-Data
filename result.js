@@ -507,7 +507,7 @@ app.get('/youtube-analytics', (req, res) => {
       const youtubeAnalytics = google.youtubeAnalytics({
         version: 'v2',
         auth: oAuth2Client,
-      });
+      })
 
       youtubeAnalytics.reports
         .query({

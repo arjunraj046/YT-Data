@@ -78,6 +78,7 @@ app.get('/oauth2callback', async (req, res) => {
   }
 });
 
+
 // fetch the types of reports 
 app.get('/youtube-report-types', checkAccessToken, async (req, res) => {
   try {
@@ -172,15 +173,31 @@ app.get('/reports', checkAccessToken, async (req, res) => {
 
 
 
-
-
-
-
-
-
-
-
-
+// Define a route to fetch extended YouTube analytics
+app.get('/youtube-analytics', (req, res) => {
+  const youtubeAnalytics = google.youtubeAnalytics({
+    version: 'v2',
+    auth: oAuth2Client,
+  })
+    
+  youtubeAnalytics.reports
+        .query({
+          dimensions: 'day',
+          startDate: '2023-11-01',
+          endDate: '2023-11-30',
+          filters: 'claimedStatus==claimed',
+          ids: `contentOwner==${ownerID}`,
+          includeHistoricalChannelData: true,
+          metrics:'views,estimatedRevenue,estimatedAdRevenue,estimatedRedPartnerRevenue,grossRevenue,adImpressions,cpm,playbackBasedCpm,monetizedPlaybacks',
+        })
+        .then((data) =>{
+          console.log(data.data);
+          res.json(data.data)
+        })
+        .catch((error) =>
+          res.status(500).json({ error: 'The API returned an error', details: error.errors })
+        );
+});
 
 
 
