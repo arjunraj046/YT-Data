@@ -191,12 +191,17 @@ app.get('/youtube-analytics', (req, res) => {
           metrics:'views,estimatedRevenue,estimatedAdRevenue,estimatedRedPartnerRevenue,grossRevenue,adImpressions,cpm,playbackBasedCpm,monetizedPlaybacks',
         })
         .then((data) =>{
+          console.log("---------------------------------------------------------------------------------------------------");
           console.log(data.data);
+          console.log("---------------------------------------------------------------------------------------------------");
           res.json(data.data)
         })
-        .catch((error) =>
-          res.status(500).json({ error: 'The API returned an error', details: error.errors })
-        );
+        .catch((error) =>{
+          console.log("---------------------------------------------------------------------------------------------------");
+          console.log(error);
+          console.log("---------------------------------------------------------------------------------------------------");
+          res.status(500).json({ error: 'The API returned an error', details: error.errors })          
+        });
 });
 
 
