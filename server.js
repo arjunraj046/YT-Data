@@ -6,7 +6,7 @@ const app = express()
 const PORT = 3000
 
 let accessToken
-let refreshToken = '1//0g_Sm99yCDINpCgYIARAAGBASNwF-L9Irg26Lozb5vwIpIG4GAnh7qz958n6rSTjEZTRJFwFUtjHn9sYclZVEfPO5GJR-BCQNHjs'
+let refreshToken = '1//0gd9M2-SeZIbdCgYIARAAGBASNwF-L9IrLyGrZFrYFhGgZfmFruhxCNyBPVHhiqgAqWXtx99fghTZTWTR_5Jy2jdN_ob9DWPJOCQ'
 
 const ownerID = "Jgrl-IYF1196ZxijRcZLXQ"
 const CLIENT_ID = '327277406160-7oddheciuo5m459o6cfqqobf7cclhnmp.apps.googleusercontent.com'
@@ -124,10 +124,10 @@ app.post('/create-job', checkAccessToken, async (req, res) => {
       'id':'12323TH',
       // 'reportTypeId':'content_owner_estimated_revenue_a1',
       // 'reportTypeId':'content_owner_global_ad_revenue_summary_a1',
-      'reportTypeId':'content_owner_ad_rates_a1',
+      'reportTypeId':'content_owner_asset_estimated_revenue_a1',
       'name':'adsRate',
-      'createTime':new Date('2023-11-01').toISOString(),
-      'expireTime':new Date('2023-11-30').toISOString(),
+      'createTime':new Date('2023-12-01').toISOString(),
+      'expireTime':new Date('2023-12-13').toISOString(),
       'systemManaged':false
     }
     const response = await axios.post(`https://youtubereporting.googleapis.com/v1/jobs?onBehalfOfContentOwner=${ownerID}`, param, {
@@ -150,7 +150,7 @@ app.post('/create-job', checkAccessToken, async (req, res) => {
 // report need to download and process
 app.get('/reports', checkAccessToken, async (req, res) => {
   try {
-    const jobId = "4e055ed3-a7f3-41c8-b045-7a98b665bba6";
+    const jobId = "a5d87955-f89c-4f12-a959-d2ce0ae19ce3";
     const ownerID = "Jgrl-IYF1196ZxijRcZLXQ"; 
     let url =        `https://youtubereporting.googleapis.com/v1/jobs/${jobId}/reports?onBehalfOfContentOwner=${ownerID}`;
     console.log("URL is this ::",url);
@@ -161,6 +161,7 @@ app.get('/reports', checkAccessToken, async (req, res) => {
     });
     console.log("------------------------------------------------------------------------------");
     console.log('Report:', response.data);
+    console.log(response);
     console.log("------------------------------------------------------------------------------");
     res.json(response.data);
   } catch (error) {
@@ -177,7 +178,7 @@ app.get('/reports', checkAccessToken, async (req, res) => {
 app.get('/youtube-analytics', (req, res) => {
   const youtubeAnalytics = google.youtubeAnalytics({
     version: 'v2',
-    auth: oAuth2Client,
+    auth: oauth2Client,
   })
     
   youtubeAnalytics.reports
