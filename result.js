@@ -545,3 +545,15 @@ let responseApi = {
         }
     ]
 }
+
+
+let responseAPi1 = {
+    "error": "The API returned an error",
+    "details": [
+        {
+            "message": "The query is not supported. Check the documentation at https://developers.google.com/youtube/analytics/v2/available_reports for a list of supported queries.",
+            "domain": "global",
+            "reason": "badRequest"
+        }
+    ]
+}
