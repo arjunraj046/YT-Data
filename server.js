@@ -181,17 +181,54 @@ app.get('/youtube-analytics', (req, res) => {
     auth: oauth2Client,
   })
     
-  youtubeAnalytics.reports
-        .query({
-          dimensions: 'day',
-          startDate: '2023-11-01',
-          endDate: '2023-11-30',
-          filters: 'claimedStatus==claimed',
-          ids: `contentOwner==${ownerID}`,
-          includeHistoricalChannelData: true,
-          metrics:'views,estimatedRevenue,estimatedAdRevenue,estimatedRedPartnerRevenue,grossRevenue,adImpressions,cpm,playbackBasedCpm,monetizedPlaybacks',
+  youtubeAnalytics.reports.query({
+      dimensions: 'day',
+      startDate: '2023-11-01',
+      endDate: '2023-11-30', 
+      filters: 'claimedStatus==claimed',
+      ids: `contentOwner==${ownerID}`,
+      includeHistoricalChannelData: true,
+      metrics: 'views,estimatedRevenue,estimatedAdRevenue,estimatedRedPartnerRevenue',
+    }).then((data) =>{
+          console.log("---------------------------------------------------------------------------------------------------");
+          console.log(data.data);
+          console.log("---------------------------------------------------------------------------------------------------");
+          res.json(data.data)
         })
-        .then((data) =>{
+        .catch((error) =>{
+          console.log("---------------------------------------------------------------------------------------------------");
+          console.log(error);
+          console.log("---------------------------------------------------------------------------------------------------");
+          res.status(500).json({ error: 'The API returned an error', details: error.errors })          
+        });
+});
+
+
+
+// Define a route to fetch extended YouTube analytics
+app.get('/youtube-analytics1', (req, res) => {
+  const youtubeAnalytics = google.youtubeAnalytics({
+    version: 'v2',
+    auth: oauth2Client,
+  })
+    
+  youtubeAnalytics.reports.query({
+    dimensions: 'date,channel_id,video_id,asset_id,claimed_status,uploader_type,live_or_on_demand,subscribed_status,country_code',
+    metrics: 'views,watch_time_minutes,average_view_duration_seconds,average_view_duration_percentage,annotation_click_through_rate,annotation_close_rate,annotation_impressions,annotation_clickable_impressions,annotation_closable_impressions,annotation_clicks,annotation_closes,card_click_rate,card_teaser_click_rate,card_impressions,card_teaser_impressions,card_clicks,card_teaser_clicks,red_views,red_watch_time_minutes',
+    ids: `contentOwner==${ownerID}`,
+    startDate: '2023-01-01',
+    endDate: '2023-12-31',
+    filters: 'claimedStatus==claimed',  
+    // dimensions: 'day',
+     // startDate: '2023-11-01',
+      // endDate: '2023-11-30', 
+      // filters: 'claimedStatus==claimed',
+      // ids: `contentOwner==${ownerID}`,
+      // includeHistoricalChannelData: true,
+      // dimensions: 'date,channel_id,video_id,asset_id,claimed_status,uploader_type,live_or_on_demand,subscribed_status,country_code',
+      // metrics: 'views,watch_time_minutes,average_view_duration_seconds,average_view_duration_percentage,annotation_click_through_rate,annotation_close_rate,annotation_impressions,annotation_clickable_impressions,annotation_closable_impressions,annotation_clicks,annotation_closes,card_click_rate,card_teaser_click_rate,card_impressions,card_teaser_impressions,card_clicks,card_teaser_clicks,red_views,red_watch_time_minutes',
+      // metrics: 'views,estimatedRevenue,estimatedAdRevenue,estimatedRedPartnerRevenue',
+    }).then((data) =>{
           console.log("---------------------------------------------------------------------------------------------------");
           console.log(data.data);
           console.log("---------------------------------------------------------------------------------------------------");

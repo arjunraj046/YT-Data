@@ -532,3 +532,16 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+
+
+let responseApi = {
+    "error": "The API returned an error",
+    "details": [
+        {
+            "message": "The query is not supported. Check the documentation at https://developers.google.com/youtube/analytics/v2/available_reports for a list of supported queries.",
+            "domain": "global",
+            "reason": "badRequest"
+        }
+    ]
+}
