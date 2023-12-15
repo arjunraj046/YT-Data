@@ -233,7 +233,7 @@ app.get('/youtube-analytics1', (req, res) => {
       'card_clicks',
       'card_teaser_clicks',
       'red_views',
-      'red_watch_time_minutes',
+      // 'red_watch_time_minutes',
     ],
     ids: `contentOwner==${ownerID}`,
     startDate: '2023-01-01',
