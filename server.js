@@ -174,6 +174,16 @@ app.get('/reports', checkAccessToken, async (req, res) => {
 
 
 
+
+
+
+
+
+
+
+
+
+
 // Define a route to fetch extended YouTube analytics
 app.get('/youtube-analytics', (req, res) => {
   const youtubeAnalytics = google.youtubeAnalytics({
@@ -183,11 +193,12 @@ app.get('/youtube-analytics', (req, res) => {
     
   youtubeAnalytics.reports.query({
       dimensions: 'day',
+      sort:'day',
       startDate: '2023-11-01',
       endDate: '2023-11-30', 
-      filters: 'claimedStatus==claimed',
+      // filters: 'claimedStatus==claimed',
       ids: `contentOwner==${ownerID}`,
-      includeHistoricalChannelData: true,
+      // includeHistoricalChannelData: true,
       metrics: 'views,estimatedRevenue,estimatedAdRevenue,estimatedRedPartnerRevenue',
     }).then((data) =>{
           console.log("---------------------------------------------------------------------------------------------------");
@@ -202,8 +213,6 @@ app.get('/youtube-analytics', (req, res) => {
           res.status(500).json({ error: 'The API returned an error', details: error.errors })          
         });
 });
-
-
 
 // Define a route to fetch extended YouTube analytics
 app.get('/youtube-analytics1', (req, res) => {
@@ -267,6 +276,11 @@ app.get('/youtube-analytics1', (req, res) => {
           res.status(500).json({ error: 'The API returned an error', details: error.errors })          
         });
 });
+
+
+
+
+
 
 // sending the token back ...
 app.get("/accesstoken",(req,res)=>{
